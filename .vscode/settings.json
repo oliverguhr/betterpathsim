@@ -1,0 +1,5 @@
+{
+    "php.validate.enable": true,
+    "php.validate.executablePath": "C:\\Program Files (x86)\\PHP\\php.exe",
+    "php.validate.run": "onType"
+}
