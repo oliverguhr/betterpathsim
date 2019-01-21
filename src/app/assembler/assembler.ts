@@ -84,6 +84,8 @@ export class Assembler implements OnInit {
         map.cellSize = 25;
         map.widthPx = map.map.cols * map.cellSize;
         map.heightPx = map.map.rows * map.cellSize;
+
+        console.log(map.widthPx, map.heightPx);
     
         map.map.notifyOnChange((cell: Cell) => {
             if (map.robotIsMoving) {

@@ -1,0 +1,182 @@
+
+/*################################
+        CSS für SVG 
+#################################*/
+
+rect {
+    stroke: #CCC;
+    stroke-width: 1px;
+    fill: #FFF;
+    shape-rendering: crispEdges;
+}
+
+rect:hover {
+      fill: #666 !important;
+}
+
+rect.blocked {
+    fill: #666;
+}
+
+rect.goal {
+    fill: #F88;
+}
+rect.goal:hover {
+      fill: #F88 !important;
+      cursor: pointer;
+}
+
+rect.start {
+    fill: #8F8;
+}
+
+rect.start:hover {
+      fill: #8F8 !important;
+      cursor: pointer;
+}
+
+rect.current {
+    fill: #44F;
+}
+
+rect.open {
+    fill: #BBF;
+}
+
+rect.closed {
+    fill: #DDD;
+}
+
+rect.forced {
+    fill: #C8F;
+}
+
+line {
+    stroke-width: 2px;
+    stroke-linecap: round;
+}
+
+line.previous {
+    stroke: #999;
+}
+
+line.current {
+    stroke: #44F;
+}
+
+line.examined {
+    stroke: #AAA;
+    stroke-dasharray: 3, 3;
+}
+
+#arrowhead-previous {
+    fill: #999;
+    stroke: #999;
+    stroke-width: 1px;
+}
+
+#arrowhead-current {
+    fill: #44F;
+    stroke: #44F;
+    stroke-width: 1px;
+}
+
+#arrowhead-examined {
+    fill: #AAA;
+    stroke: #AAA;
+    stroke-width: 1px;
+}
+
+/*################################
+        CSS für Rest 
+#################################*/
+
+body {
+    font-family: sans-serif;
+}
+
+h1 {
+    font-weight: normal;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    align-items: flex-start;
+}
+
+.flex-items-default {
+    width: 300px;
+    height: 250px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 0;
+}
+
+.header {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 95%;
+    justify-content: center;
+}
+
+.map {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 95%;
+    justify-content: center;        
+}
+
+.flex-item-3 {
+    display: flex;
+    height: 250px;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 200px;
+}
+
+.controls {
+    width: 14em;
+    margin-left: 1em;
+}
+
+.controls fieldset {
+    padding: 0.7em;
+    margin-bottom: 1em;
+}
+
+.controls input,
+label {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.7em;
+}
+
+.controls label>span {
+    width: 4em;
+    float: left;
+}
+
+.controls label>select {
+    width: 9.6em;
+}
+
+.controls label>input {
+    display: inline;
+    vertical-align: top;
+}
+
+.inputWithLabel{
+    width: calc(100% - 130px) !important;
+    float: left;
+    margin-right: 8px;
+}
+
+.ng-cloak{
+    display: none !important;
+}

@@ -1,3 +1,97 @@
-<p>
+<div>
   assembler works! {{this.cols}}
-</p>
+
+  <!-- <svg    attr.height.px="{{this.heightPx +1}}" 
+            attr.width.px="{{this.widthPx + 1}}">
+        <g ng-repeat="row in this.map.grid">
+            
+            <rect   ng-repeat="cell in row" 
+                    attr.x.px="{{cell.position.x * this.cellSize}}" 
+                    attr.y.px="{{cell.position.y * this.cellSize}}" 
+                    attr.width.px="{{this.cellSize}}" 
+                    attr.height.px="{{this.cellSize}}" 
+                    ng-class="{blocked:cell.isBlocked,current:cell.isCurrent,closed:cell.isVisited,start:cell.isStart, goal:cell.isGoal}" 
+                    ng-mousedown="this.clickOnCell(cell)" 
+                    ng-mouseover="this.mouseOverCell(cell, $event)" 
+                    attr.style="fill:{{cell.color}};">
+            </rect>
+       
+        </g>
+    </svg> -->
+
+    <div class="controls">
+            <form>
+                <fieldset>
+                    <legend>Map Options</legend>
+                    <input type="button" ng-click="this.cleanMap()" value="Reset map" />
+                    <input type="button" ng-click="this.addDynamicObstacle()" value="Add moving block" />
+                    <input type="button" ng-click="this.addRandomObstacles()" value="Add random blocks" />
+                    <input type="button" ng-click="this.addWalls()" value="Add Walls" />
+
+                    <label for="algorithm">
+                        <input type="checkbox" ng-click="map.visualizePathCosts()" ng-model="map.isVisualizePathEnabled" /> Visualize path cost
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Algorithm</legend>
+                    <label for="algorithm">
+                        <span>Typ:</span>
+                        <select name="algorithm" id="algorithm" ng-model="map.algorithm" ng-change="map.changeAlgorithm();">
+                            <option value="Dijkstra">Dijkstra</option>
+                            <option value="AStar">A*</option>
+                            <option value="LpaStar">Lifelong Planning A*</option>
+                            <option value="GAAStar">GAA*</option>
+                            <option value="MPGAAStar">MPGAA*</option>
+                        </select>
+                        <span>Distance:</span>
+                        <select name="distance" id="distance" ng-model="map.distance" ng-change="map.changeAlgorithm();">
+                            <option value="euklid">Euklid</option>
+                            <option value="manhattan">Manhattan</option>
+                            <option value="diagonalShortcut">Diagonal Shortcut</option>
+                        </select>
+                    </label>
+
+                    <input type="button" ng-click="map.runStepByStep()" value="Run step by step" ng-hide="map.algorithm == 'LpaStar' || map.algorithm == 'MPGAAStar'|| map.algorithm == 'GAAStar'" />
+                    
+                    <div ng-show="map.algorithm == 'MPGAAStar' || map.algorithm == 'GAAStar'" >
+                     <input type="number" class="inputWithLabel"  value="" ng-model="map.robotStepInterval" ng-disabled="map.robotIsMoving"  /> <label>ms step interval</label>
+                     <input type="button" ng-click="map.startRobot()" value="Start Robot" ng-disabled="map.robotIsMoving" />
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Statistic</legend>
+                    <div>Visited Cells: <span>{{this.stat.visitedCells}}</span></div>
+                    <div>Path Length: <span>{{this.stat.pathLength}}</span></div>
+                </fieldset>
+                <fieldset>
+                    <legend>Cell</legend>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>Position</td><td>{{this.hoveredCell.position.x}} {{this.hoveredCell.position.y}}<td> 
+                        </tr>
+                        <tr ng-show="map.hoveredCell.distance">
+                          <td>Distance g(x)</td><td>{{this.hoveredCell.distance | number:3}}<td>
+                        </tr>
+                        <tr ng-show="map.hoveredCell.rhs">
+                          <td>Rhs</td><td>{{this.hoveredCell.rhs | number:3}}<td>
+                        </tr>  
+                         <tr ng-show="map.hoveredCell.estimatedDistance">
+                          <td>est. Distance f(x)</td><td>{{this.hoveredCell.estimatedDistance | number:3}}<td>
+                        </tr>  
+                         <tr ng-show="map.hoveredCell.heuristicDistance">
+                          <td>heuristic Distance h(x)</td><td>{{this.hoveredCell.heuristicDistance | number:3}}<td> 
+                        </tr>                           
+                      </tbody>
+                    </table>
+                </fieldset>
+            </form>
+        </div>
+
+
+
+
+
+</div>

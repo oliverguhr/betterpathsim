@@ -99,5 +99,13 @@ export class Map {
           this.grid[row].push(new Cell(row, col));
       }
     }
+    /*
+    for (let row = 0; row < this.rows; row++) {
+        for (let col = 0; col < this.cols; col++) {
+            console.log(this.grid[row][col].position.x);
+        }
+      }
+    */
+    console.log("Grid initialized");
   }
 }
