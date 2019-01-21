@@ -2,10 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { App } from './app';
+import { Assembler } from './assembler/assembler';
 
 @NgModule({
     declarations: [
-        App
+        App,
+        Assembler
     ],
     
     imports: [

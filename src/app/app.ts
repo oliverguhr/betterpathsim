@@ -11,12 +11,9 @@ export class App implements OnInit{
 
     title = 'Better Pathsim';
     zahl = 0;
-
-    @Input('parameter')
-    userName: String;
-
+    
     ngOnInit() { 
-        console.log(this.userName);
+       
     }
 
 }
