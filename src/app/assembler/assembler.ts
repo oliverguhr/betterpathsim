@@ -49,14 +49,13 @@ export class Assembler implements OnInit {
 
     @Input() cols :number;
     @Input() rows :number;
-    @Input() interval :any;
 
     constructor() { 
     }
 
     ngOnInit() {
         
-        console.log(this.cols, this.rows, this.interval);
+        console.log(this.cols, this.rows);
         
         let map = this;
         
@@ -203,12 +202,9 @@ export class Assembler implements OnInit {
         this.clearRobots();
         let pathFinder = this.getAlgorithmInstance();
 
-                    // Was ist der Interval?! -> Wo kommt er her, was ist er?!
-        let interval = this.interval( () => {
-
-
+        let interval = setInterval( () => {
             if (!pathFinder.step()) {
-                interval.cancel(interval);
+                clearTimeout(interval);
             } else {
                 this.visualizePathCosts();
             }
@@ -228,8 +224,7 @@ export class Assembler implements OnInit {
         let goal = this.map.getGoalCell();
         let lastPosition:Cell;
 
-                //Hier auch interval!
-        let interval = this.interval (() => {
+        let interval = setInterval (() => {
             //cleanup old visited cells, to show which cells are calculated by the algorithm 
             this.map.cells.filter((x:Cell) => x.isVisited).forEach((x:Cell) =>{ x.type = CellType.Free; x.color = undefined});
             
@@ -237,8 +232,7 @@ export class Assembler implements OnInit {
             start = nextCell;
             if (start.isGoal) {
 
-                //Interval hier
-                interval.cancel(interval);
+                clearTimeout(interval);
                 this.map.removeChangeListener(onMapUpdate);
                 this.robotIsMoving = false;
             } else {
@@ -284,19 +278,16 @@ export class Assembler implements OnInit {
         this.robots.add();
 
         if (this.robotIntervall !== undefined) {
-            
-            //Interval hier!
-            this.interval.cancel(this.robotIntervall);
+            clearTimeout(this.robotIntervall);
         }
 
-                                //Interval hier!
-        this.robotIntervall = this.interval( () => {
+        this.robotIntervall =setInterval( () => {
             this.robots.update();
         }, 800);
     };
 
     clearRobots = () => {
-        this.interval.cancel(this.robotIntervall);
+        clearTimeout(this.robotIntervall);
         if (this.robots !== undefined) {
 
             //robots von DynmicObstacleGenerator ist privat .. -> statischer Zugriff so nicht möglich

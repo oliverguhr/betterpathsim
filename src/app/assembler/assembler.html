@@ -1,6 +1,4 @@
 <div>
-  assembler works! {{this.cols}}
-
    <svg    attr.height.px="{{this.heightPx +1}}" 
             attr.width.px="{{this.widthPx + 1}}">
         <g *ngFor="let row of this.map.grid">
@@ -11,8 +9,8 @@
                     attr.width.px="{{this.cellSize}}" 
                     attr.height.px="{{this.cellSize}}" 
                     ng-class="{blocked:cell.isBlocked,current:cell.isCurrent,closed:cell.isVisited,start:cell.isStart, goal:cell.isGoal}" 
-                    ng-mousedown="this.clickOnCell(cell)" 
-                    ng-mouseover="this.mouseOverCell(cell, $event)" 
+                    (mousedown)="this.clickOnCell(cell)" 
+                    (mouseover)="this.mouseOverCell(cell, $event)" 
                     attr.style="fill:{{cell.color}};">
             </rect>
        
@@ -23,13 +21,13 @@
             <form>
                 <fieldset>
                     <legend>Map Options</legend>
-                    <input type="button" ng-click="this.cleanMap()" value="Reset map" />
-                    <input type="button" ng-click="this.addDynamicObstacle()" value="Add moving block" />
-                    <input type="button" ng-click="this.addRandomObstacles()" value="Add random blocks" />
-                    <input type="button" ng-click="this.addWalls()" value="Add Walls" />
+                    <input type="button" (click)="this.cleanMap()" value="Reset map" />
+                    <input type="button" (click)="this.addDynamicObstacle()" value="Add moving block" />
+                    <input type="button" (click)="this.addRandomObstacles()" value="Add random blocks" />
+                    <input type="button" (click)="this.addWalls()" value="Add Walls" />
 
                     <label for="algorithm">
-                        <input type="checkbox" ng-click="map.visualizePathCosts()" ng-model="map.isVisualizePathEnabled" /> Visualize path cost
+                        <input type="checkbox" (click)="map.visualizePathCosts()" ng-model="map.isVisualizePathEnabled" /> Visualize path cost
                     </label>
                 </fieldset>
 
@@ -52,11 +50,11 @@
                         </select>
                     </label>
 
-                    <input type="button" ng-click="map.runStepByStep()" value="Run step by step" ng-hide="map.algorithm == 'LpaStar' || map.algorithm == 'MPGAAStar'|| map.algorithm == 'GAAStar'" />
+                    <input type="button" (click)="map.runStepByStep()" value="Run step by step" ng-hide="map.algorithm == 'LpaStar' || map.algorithm == 'MPGAAStar'|| map.algorithm == 'GAAStar'" />
                     
                     <div ng-show="map.algorithm == 'MPGAAStar' || map.algorithm == 'GAAStar'" >
                      <input type="number" class="inputWithLabel"  value="" ng-model="map.robotStepInterval" ng-disabled="map.robotIsMoving"  /> <label>ms step interval</label>
-                     <input type="button" ng-click="map.startRobot()" value="Start Robot" ng-disabled="map.robotIsMoving" />
+                     <input type="button" (click)="map.startRobot()" value="Start Robot" ng-disabled="map.robotIsMoving" />
                     </div>
                 </fieldset>
 
@@ -65,6 +63,7 @@
                     <div>Visited Cells: <span>{{this.stat.visitedCells}}</span></div>
                     <div>Path Length: <span>{{this.stat.pathLength}}</span></div>
                 </fieldset>
+                
                 <fieldset>
                     <legend>Cell</legend>
                     <table>

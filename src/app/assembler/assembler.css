@@ -141,16 +141,18 @@ h1 {
 }
 
 .controls {
-    width: 14em;
-    margin-left: 1em;
+    width: 100%;
 }
 
 .controls fieldset {
-    padding: 0.7em;
-    margin-bottom: 1em;
+    display: inline;
 }
 
-.controls input,
+#fs1{
+    width: 10em;
+}
+
+.controls input, 
 label {
     display: block;
     width: 100%;
