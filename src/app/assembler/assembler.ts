@@ -51,12 +51,15 @@ export class Assembler implements OnInit {
     @Input() rows :number;
     @Input() interval :any;
 
-    constructor() { }
+    constructor() { 
+    }
 
     ngOnInit() {
+        
         console.log(this.cols, this.rows, this.interval);
         
         let map = this;
+        
         map.name = "test";
         map.cols = this.cols;
         map.rows = this.rows;
@@ -86,7 +89,7 @@ export class Assembler implements OnInit {
         map.heightPx = map.map.rows * map.cellSize;
 
         console.log(map.widthPx, map.heightPx);
-    
+
         map.map.notifyOnChange((cell: Cell) => {
             if (map.robotIsMoving) {
                 return;
@@ -116,6 +119,8 @@ export class Assembler implements OnInit {
 
         this.editStartCell = false;
         this.editGoalCell = false;
+
+         
     };
 
     //######################################

@@ -1,11 +1,11 @@
 <div>
   assembler works! {{this.cols}}
 
-  <!-- <svg    attr.height.px="{{this.heightPx +1}}" 
+   <svg    attr.height.px="{{this.heightPx +1}}" 
             attr.width.px="{{this.widthPx + 1}}">
-        <g ng-repeat="row in this.map.grid">
+        <g *ngFor="let row of this.map.grid">
             
-            <rect   ng-repeat="cell in row" 
+            <rect   *ngFor="let cell of row" 
                     attr.x.px="{{cell.position.x * this.cellSize}}" 
                     attr.y.px="{{cell.position.y * this.cellSize}}" 
                     attr.width.px="{{this.cellSize}}" 
@@ -17,7 +17,7 @@
             </rect>
        
         </g>
-    </svg> -->
+    </svg> 
 
     <div class="controls">
             <form>

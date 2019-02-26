@@ -4,7 +4,6 @@ import {CellType} from '../cell-type/cell-type';
 import {Map} from '../map/map';
 import {Cell} from "../cell/cell";
 import {Position} from "../position/position";
-import { pseudoRandomBytes } from 'crypto';
 
 @Component({
   selector: 'app-moveable'
@@ -27,6 +26,9 @@ export class Moveable {
     this.position = position;
 
     this.map.updateCellOnPosition(position, (cell: Cell) => {
+
+        console.log(cell);
+
         cell.type = this.cellType;
         this.currentCell = cell;
         return cell;
