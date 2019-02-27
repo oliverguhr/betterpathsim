@@ -72,16 +72,16 @@
                           <td>Position</td><td>{{this.hoveredCell.position.x}} {{this.hoveredCell.position.y}}<td> 
                         </tr>
                         <tr ng-show="map.hoveredCell.distance">
-                          <td>Distance g(x)</td><td>{{this.hoveredCell.distance | number:3}}<td>
+                          <td>Distance g(x)</td><td>{{this.hoveredCell.distance | number:'.0-3'}}<td>
                         </tr>
                         <tr ng-show="map.hoveredCell.rhs">
-                          <td>Rhs</td><td>{{this.hoveredCell.rhs | number:3}}<td>
+                          <td>Rhs</td><td>{{this.hoveredCell.rhs | number:'.0-3'}}<td>
                         </tr>  
                          <tr ng-show="map.hoveredCell.estimatedDistance">
-                          <td>est. Distance f(x)</td><td>{{this.hoveredCell.estimatedDistance | number:3}}<td>
+                          <td>est. Distance f(x)</td><td>{{this.hoveredCell.estimatedDistance | number:'.0-3'}}<td>
                         </tr>  
                          <tr ng-show="map.hoveredCell.heuristicDistance">
-                          <td>heuristic Distance h(x)</td><td>{{this.hoveredCell.heuristicDistance | number:3}}<td> 
+                          <td>heuristic Distance h(x)</td><td>{{this.hoveredCell.heuristicDistance | number:'.0-3'}}<td> 
                         </tr>                           
                       </tbody>
                     </table>
