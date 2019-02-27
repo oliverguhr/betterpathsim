@@ -26,11 +26,9 @@ export class Moveable {
     this.position = position;
 
     this.map.updateCellOnPosition(position, (cell: Cell) => {
-
-        console.log(cell);
-
         cell.type = this.cellType;
         this.currentCell = cell;
+        console.log(cell);
         return cell;
     });
   }

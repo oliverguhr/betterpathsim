@@ -40,22 +40,22 @@ export class Cell {
   #################################################*/
 
   get isFree() {
-    return this.type === CellType.Free;
+    return this.cellType === CellType.Free;
   }
   get isBlocked() {
-    return this.type === CellType.Blocked;
+    return this.cellType === CellType.Blocked;
   }
   get isVisited() {
-    return this.type === CellType.Visited;
+    return this.cellType === CellType.Visited;
   }
   get isCurrent() {
-    return this.type === CellType.Current;
+    return this.cellType === CellType.Current;
   }
   get isStart() {
-    return this.type === CellType.Start;
+    return this.cellType === CellType.Start;
   }
   get isGoal() {
-    return this.type === CellType.Goal;
+    return this.cellType === CellType.Goal;
   }
   get isBlockable() {
     return this.isFree || this.isCurrent ||this.isVisited;

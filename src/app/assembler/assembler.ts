@@ -101,6 +101,7 @@ export class Assembler implements OnInit {
                 return;
             }
             map.map.resetPath();
+
             if (map.algorithmInstance.isInitialized) {
                 console.time(map.algorithm);
                 map.algorithmInstance.mapUpdate([cell]);
@@ -119,7 +120,7 @@ export class Assembler implements OnInit {
         this.editStartCell = false;
         this.editGoalCell = false;
 
-         
+        this.hoveredCell = new Cell(0,0,CellType.Free);
     };
 
     //######################################
