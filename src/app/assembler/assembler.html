@@ -11,7 +11,8 @@
                     ng-class="{blocked:cell.isBlocked,current:cell.isCurrent,closed:cell.isVisited,start:cell.isStart, goal:cell.isGoal}" 
                     (mousedown)="this.clickOnCell(cell)" 
                     (mouseover)="this.mouseOverCell(cell, $event)" 
-                    attr.style="fill:{{cell.color}};">
+                    [ngStyle]="{'fill': cell.color}"
+                    >
             </rect>
        
         </g>

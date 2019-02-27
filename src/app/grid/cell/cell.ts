@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Sanitizer } from '@angular/core';
 import { CellType } from '../cell-type/cell-type';
 import { Position } from '../position/position';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-cell'
@@ -15,7 +16,7 @@ export class Cell {
   public estimatedDistance: number;
   public heuristicDistance: number;
 
-  public color: String;
+  public color: any;
   public previous: Cell;
   public isOpen: boolean;
 
