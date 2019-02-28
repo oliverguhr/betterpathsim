@@ -79,10 +79,10 @@ export class Assembler implements OnInit {
     
         map.start = new Moveable(map.map, CellType.Start);
         map.start.moveTo(new Position(Math.round(map.cols / 4), Math.round(map.rows / 2)));
-    
+
         map.goal = new Moveable(map.map, CellType.Goal);
         map.goal.moveTo(new Position(Math.round((map.cols / 4) * 3), Math.round(map.rows / 2)));
-    
+        
         map.cellSize = 25;
         map.widthPx = map.map.cols * map.cellSize;
         map.heightPx = map.map.rows * map.cellSize;
@@ -282,7 +282,7 @@ export class Assembler implements OnInit {
             clearTimeout(this.robotIntervall);
         }
 
-        this.robotIntervall =setInterval( () => {
+        this.robotIntervall = setInterval( () => {
             this.robots.update();
         }, 800);
     };

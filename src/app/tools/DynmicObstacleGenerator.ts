@@ -2,8 +2,10 @@ import * as _ from "lodash";
 import { Map, Moveable, CellType, Position } from "../grid/index";
 
 export class DynmicObstacleGenerator {
-    private robots: Moveable[];
-    constructor(private map: Map) { }
+    private robots: Array<Moveable>;
+    constructor(private map: Map) {
+        this.robots = [];
+     }
 
     public add() {
         let robot = new Moveable(this.map, CellType.Blocked);

@@ -13,22 +13,20 @@ export class Moveable {
   public position: Position;
   public currentCell: Cell;
 
-  constructor(public map: Map, public cellType: CellType) { }
+  constructor(public map: Map, public cellType: CellType) {}
 
   public moveTo(position: Position){
     if (this.position !== undefined) {
       this.map.updateCellOnPosition(this.position, (cell: Cell) => {
-        cell.type = CellType.Free;
+        cell.cellType = CellType.Free;
         return cell;
       });
     }
 
     this.position = position;
-
     this.map.updateCellOnPosition(position, (cell: Cell) => {
-        cell.type = this.cellType;
+        cell.cellType = this.cellType;
         this.currentCell = cell;
-        console.log(cell);
         return cell;
     });
   }

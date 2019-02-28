@@ -11,8 +11,8 @@ import {Position} from '../position/position';
 export class Map {
 
   grid: Array< Array<Cell> >; // = Cell[][]
-  private changeListener: Function[];
-
+  private changeListener: Array<(cell: Cell) => void>;
+  
   constructor(public rows: number, public cols: number) { 
     this.grid = [ [], ];
     this.changeListener = new Array<(cell: Cell) => void>();
@@ -89,7 +89,7 @@ export class Map {
   }
 
   private hasChanged(updatedCell: Cell) {
-    this.changeListener.forEach(changeListener => changeListener(updatedCell));
+    this.changeListener.forEach( (eachFunction) => eachFunction(updatedCell) );
   }
 
   private initializeGrid() {
@@ -99,6 +99,5 @@ export class Map {
           this.grid[row].push(new Cell(row, col));
       }
     }
-    console.log("Grid initialized");
   }
 }

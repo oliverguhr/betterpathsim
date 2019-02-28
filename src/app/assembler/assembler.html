@@ -1,4 +1,5 @@
 <div>
+   
    <svg    attr.height.px="{{this.heightPx +1}}" 
             attr.width.px="{{this.widthPx + 1}}">
         <g *ngFor="let row of this.map.grid">
@@ -8,7 +9,7 @@
                     attr.y.px="{{cell.position.y * this.cellSize}}" 
                     attr.width.px="{{this.cellSize}}" 
                     attr.height.px="{{this.cellSize}}" 
-                    ng-class="{blocked:cell.isBlocked,current:cell.isCurrent,closed:cell.isVisited,start:cell.isStart, goal:cell.isGoal}" 
+                    [ngClass]="{'blocked': cell.isBlocked, 'current': cell.isCurrent, 'closed': cell.isVisited, 'start': cell.isStart, 'goal': cell.isGoal}" 
                     (mousedown)="this.clickOnCell(cell)" 
                     (mouseover)="this.mouseOverCell(cell, $event)" 
                     [ngStyle]="{'fill': cell.color}"
