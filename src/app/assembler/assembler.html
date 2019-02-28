@@ -29,7 +29,7 @@
                     <input type="button" (click)="this.addWalls()" value="Add Walls" />
 
                     <label for="algorithm">
-                        <input type="checkbox" (click)="map.visualizePathCosts()" ng-model="map.isVisualizePathEnabled" /> Visualize path cost
+                        <input type="checkbox" name="visualizePathCosts" (click)="map.visualizePathCosts()" [(ngModel)]="this.isVisualizePathEnabled" /> Visualize path cost
                     </label>
                 </fieldset>
 
@@ -37,7 +37,7 @@
                     <legend>Algorithm</legend>
                     <label for="algorithm">
                         <span>Typ:</span>
-                        <select name="algorithm" id="algorithm" ng-model="map.algorithm" ng-change="map.changeAlgorithm();">
+                        <select name="algorithm" id="algorithm" [(ngModel)]="this.algorithm" ngModelChange="this.changeAlgorithm()">
                             <option value="Dijkstra">Dijkstra</option>
                             <option value="AStar">A*</option>
                             <option value="LpaStar">Lifelong Planning A*</option>
@@ -45,18 +45,18 @@
                             <option value="MPGAAStar">MPGAA*</option>
                         </select>
                         <span>Distance:</span>
-                        <select name="distance" id="distance" ng-model="map.distance" ng-change="map.changeAlgorithm();">
+                        <select name="distance" id="distance" [(ngModel)]="this.distance" ngModelChange="this.changeAlgorithm();">
                             <option value="euklid">Euklid</option>
                             <option value="manhattan">Manhattan</option>
                             <option value="diagonalShortcut">Diagonal Shortcut</option>
                         </select>
                     </label>
 
-                    <input type="button" (click)="map.runStepByStep()" value="Run step by step" ng-hide="map.algorithm == 'LpaStar' || map.algorithm == 'MPGAAStar'|| map.algorithm == 'GAAStar'" />
+                    <input type="button" (click)="this.runStepByStep()" value="Run step by step" [hidden]="this.algorithm == 'LpaStar' || this.algorithm == 'MPGAAStar'|| this.algorithm == 'GAAStar'" />
                     
                     <div ng-show="map.algorithm == 'MPGAAStar' || map.algorithm == 'GAAStar'" >
-                     <input type="number" class="inputWithLabel"  value="" ng-model="map.robotStepInterval" ng-disabled="map.robotIsMoving"  /> <label>ms step interval</label>
-                     <input type="button" (click)="map.startRobot()" value="Start Robot" ng-disabled="map.robotIsMoving" />
+                     <input type="number" name="timestepinterval" class="inputWithLabel"  value="" [(ngModel)]="this.robotStepInterval" [disabled]="this.robotIsMoving"  /> <label>ms step interval</label>
+                     <input type="button" (click)="this.startRobot()" value="Start Robot" [disabled]="this.robotIsMoving" />
                     </div>
                 </fieldset>
 
@@ -73,16 +73,16 @@
                         <tr>
                           <td>Position</td><td>{{this.hoveredCell.position.x}} {{this.hoveredCell.position.y}}<td> 
                         </tr>
-                        <tr ng-show="map.hoveredCell.distance">
+                        <tr [hidden]="!this.hoveredCell.distance">
                           <td>Distance g(x)</td><td>{{this.hoveredCell.distance | number:'.0-3'}}<td>
                         </tr>
-                        <tr ng-show="map.hoveredCell.rhs">
+                        <tr [hidden]="!this.hoveredCell.rhs">
                           <td>Rhs</td><td>{{this.hoveredCell.rhs | number:'.0-3'}}<td>
                         </tr>  
-                         <tr ng-show="map.hoveredCell.estimatedDistance">
+                         <tr [hidden]="!this.hoveredCell.estimatedDistance">
                           <td>est. Distance f(x)</td><td>{{this.hoveredCell.estimatedDistance | number:'.0-3'}}<td>
                         </tr>  
-                         <tr ng-show="map.hoveredCell.heuristicDistance">
+                         <tr [hidden]="!this.hoveredCell.heuristicDistance">
                           <td>heuristic Distance h(x)</td><td>{{this.hoveredCell.heuristicDistance | number:'.0-3'}}<td> 
                         </tr>                           
                       </tbody>

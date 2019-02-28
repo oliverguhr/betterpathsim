@@ -148,6 +148,8 @@ h1 {
     display: inline;
 }
 
+[hidden] { display: none !important;}
+
 #fs1{
     width: 10em;
 }
