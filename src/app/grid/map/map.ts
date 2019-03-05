@@ -62,7 +62,7 @@ export class Map {
   ##############################################*/
 
   public resetPath() {
-    this.cells.filter(cell => cell.isVisitid || cell.isCurrent).forEach(cell => {
+    this.cells.filter(cell => cell.isVisited || cell.isCurrent).forEach(cell => {
       cell.type = CellType.Free;
       cell.color = undefined;
     })

@@ -35,28 +35,47 @@
 
                 <fieldset>
                     <legend>Algorithm</legend>
-                    <label for="algorithm">
-                        <span>Typ:</span>
-                        <select name="algorithm" id="algorithm" [(ngModel)]="this.algorithm" ngModelChange="this.changeAlgorithm()">
-                            <option value="Dijkstra">Dijkstra</option>
-                            <option value="AStar">A*</option>
-                            <option value="LpaStar">Lifelong Planning A*</option>
-                            <option value="GAAStar">GAA*</option>
-                            <option value="MPGAAStar">MPGAA*</option>
-                        </select>
-                        <span>Distance:</span>
-                        <select name="distance" id="distance" [(ngModel)]="this.distance" ngModelChange="this.changeAlgorithm();">
-                            <option value="euklid">Euklid</option>
-                            <option value="manhattan">Manhattan</option>
-                            <option value="diagonalShortcut">Diagonal Shortcut</option>
-                        </select>
-                    </label>
+                    <div class="inputdiv">
+                        <table>
+                            <tr>    
+                                <td> <span>Typ:</span> </td>
+                                <td> <select name="algorithm" id="algorithm" [(ngModel)]="this.algorithm" ngModelChange="this.changeAlgorithm()">
+                                    <option value="Dijkstra">Dijkstra</option>
+                                    <option value="AStar">A*</option>
+                                    <option value="LpaStar">Lifelong Planning A*</option>
+                                    <option value="GAAStar">GAA*</option>
+                                    <option value="MPGAAStar">MPGAA*</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> <span>Distance:</span> </td>
+                                <td> <select name="distance" id="distance" [(ngModel)]="this.distance" ngModelChange="this.changeAlgorithm();">
+                                    <option value="euklid">Euklid</option>
+                                    <option value="manhattan">Manhattan</option>
+                                    <option value="diagonalShortcut">Diagonal Shortcut</option>
+                                </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 
                     <input type="button" (click)="this.runStepByStep()" value="Run step by step" [hidden]="this.algorithm == 'LpaStar' || this.algorithm == 'MPGAAStar'|| this.algorithm == 'GAAStar'" />
                     
-                    <div ng-show="map.algorithm == 'MPGAAStar' || map.algorithm == 'GAAStar'" >
-                     <input type="number" name="timestepinterval" class="inputWithLabel"  value="" [(ngModel)]="this.robotStepInterval" [disabled]="this.robotIsMoving"  /> <label>ms step interval</label>
-                     <input type="button" (click)="this.startRobot()" value="Start Robot" [disabled]="this.robotIsMoving" />
+                    <div [hidden]="this.algorithm == 'LpaStar' || this.algorithm == 'Dijkstra'|| this.algorithm == 'AStar'">
+                        <table>
+                            <tr>
+                                <input type="number" name="timestepinterval" class="inputWithLabel"  value="" [(ngModel)]="this.robotStepInterval" [disabled]="this.robotIsMoving"/> 
+                                <label> ms step interval</label>
+                            </tr>
+                            <tr>
+                                <input type="number" name="viewradius" class="inputWithLabel" value="" [(ngModel)]="this.robotViewRadius"/>
+                                <label> View Radius</label>
+                            </tr>
+                            <tr>
+                                <input type="button" (click)="this.startRobot()" value="Start Robot" [disabled]="this.robotIsMoving" />
+                            </tr>
+                        </table>
                     </div>
                 </fieldset>
 

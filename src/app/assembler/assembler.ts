@@ -26,6 +26,7 @@ export class Assembler implements OnInit {
     isVisualizePathEnabled: boolean;
 
     robotStepInterval: number;
+    robotViewRadius: number;
     robotIntervall: any;
 
     editStartCell: boolean;
@@ -115,6 +116,7 @@ export class Assembler implements OnInit {
         });
 
         this.robotStepInterval = 500;
+        this.robotViewRadius = 5;
         this.robotIsMoving = false;        
 
         this.editStartCell = false;
