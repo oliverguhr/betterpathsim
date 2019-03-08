@@ -29,7 +29,7 @@
                     <input type="button" (click)="this.addWalls()" value="Add Walls" />
 
                     <label for="algorithm">
-                        <input type="checkbox" name="visualizePathCosts" (click)="map.visualizePathCosts()" [(ngModel)]="this.isVisualizePathEnabled" /> Visualize path cost
+                        <input type="checkbox" name="visualizePathCosts" (click)="this.visualizePathCosts()" [(ngModel)]="this.isVisualizePathEnabled" /> Visualize path cost
                     </label>
                 </fieldset>
 
@@ -69,8 +69,8 @@
                                 <label> ms step interval</label>
                             </tr>
                             <tr>
-                                <input type="number" name="viewradius" class="inputWithLabel" value="" [(ngModel)]="this.robotViewRadius"/>
-                                <label> View Radius</label>
+                                <input type="number" name="viewradius" class="inputWithLabel" value="" [(ngModel)]="this.robotViewRadius" ngModelChange="this.showViewRadius()"/>
+                                <label> View Radius </label>
                             </tr>
                             <tr>
                                 <input type="button" (click)="this.startRobot()" value="Start Robot" [disabled]="this.robotIsMoving" />

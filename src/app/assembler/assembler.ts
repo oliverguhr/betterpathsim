@@ -61,8 +61,6 @@ export class Assembler implements OnInit {
         let map = this;
         
         map.name = "test";
-        map.cols = this.cols;
-        map.rows = this.rows;
         map.robots = undefined;
         map.algorithm = "MPGAAStar";
         map.algorithmInstance = undefined;
@@ -76,12 +74,16 @@ export class Assembler implements OnInit {
         //  this.map.initializeMap();  -- Map-Initialisierung
         //###########################################################
 
-        map.map = new Map(map.rows, map.cols);
+        this.robotViewRadius = 5;
+
+        this.map = new Map(this.rows, this.cols, this.robotViewRadius);
     
-        map.start = new Moveable(map.map, CellType.Start);
+        map.start = new Moveable(this.map, CellType.Start);
         map.start.moveTo(new Position(Math.round(map.cols / 4), Math.round(map.rows / 2)));
 
-        map.goal = new Moveable(map.map, CellType.Goal);
+        console.log("Start: "+this.map.getStartCell());
+
+        map.goal = new Moveable(this.map, CellType.Goal);
         map.goal.moveTo(new Position(Math.round((map.cols / 4) * 3), Math.round(map.rows / 2)));
         
         map.cellSize = 25;
@@ -90,7 +92,7 @@ export class Assembler implements OnInit {
 
         console.log(map.widthPx, map.heightPx);
 
-        map.map.notifyOnChange((cell: Cell) => {
+        this.map.notifyOnChange((cell: Cell) => {
             if (map.robotIsMoving) {
                 return;
             }
@@ -116,7 +118,6 @@ export class Assembler implements OnInit {
         });
 
         this.robotStepInterval = 500;
-        this.robotViewRadius = 5;
         this.robotIsMoving = false;        
 
         this.editStartCell = false;
@@ -227,12 +228,15 @@ export class Assembler implements OnInit {
         let goal = this.map.getGoalCell();
         let lastPosition:Cell;
 
+        this.map.drawViewRadius(start);
+
         let interval = setInterval (() => {
             //cleanup old visited cells, to show which cells are calculated by the algorithm 
             this.map.cells.filter((x:Cell) => x.isVisited).forEach((x:Cell) =>{ x.type = CellType.Free; x.color = undefined});
-            
             let nextCell = pathFinder.calculatePath(start, goal) as Cell;            
             start = nextCell;
+            this.map.drawViewRadius(start);
+            
             if (start.isGoal) {
 
                 clearTimeout(interval);
@@ -346,6 +350,10 @@ export class Assembler implements OnInit {
         this.map.resetPath();
         this.calculatePath();
     };
+
+    showViewRadius = () => {
+        console.log(this.robotViewRadius);
+    }
 
 }
 
