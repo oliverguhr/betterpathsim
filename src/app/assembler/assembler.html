@@ -9,7 +9,7 @@
                     attr.y.px="{{cell.position.y * this.cellSize}}" 
                     attr.width.px="{{this.cellSize}}" 
                     attr.height.px="{{this.cellSize}}" 
-                    [ngClass]="{'blocked': cell.isBlocked, 'current': cell.isCurrent, 'closed': cell.isVisited, 'start': cell.isStart, 'goal': cell.isGoal}" 
+                    [ngClass]="{'blocked': cell.isBlocked, 'current': cell.isCurrent, 'closed': cell.isVisited, 'start': cell.isStart, 'goal': cell.isGoal, 'inView': cell.isInView}" 
                     (mousedown)="this.clickOnCell(cell)" 
                     (mouseover)="this.mouseOverCell(cell, $event)" 
                     [ngStyle]="{'fill': cell.color}"
@@ -39,7 +39,7 @@
                         <table>
                             <tr>    
                                 <td> <span>Typ:</span> </td>
-                                <td> <select name="algorithm" id="algorithm" [(ngModel)]="this.algorithm" ngModelChange="this.changeAlgorithm()">
+                                <td> <select name="algorithm" id="algorithm" [(ngModel)]="this.algorithm" (ngModelChange)="this.changeAlgorithm()">
                                     <option value="Dijkstra">Dijkstra</option>
                                     <option value="AStar">A*</option>
                                     <option value="LpaStar">Lifelong Planning A*</option>
@@ -50,7 +50,7 @@
                             </tr>
                             <tr>
                                 <td> <span>Distance:</span> </td>
-                                <td> <select name="distance" id="distance" [(ngModel)]="this.distance" ngModelChange="this.changeAlgorithm();">
+                                <td> <select name="distance" id="distance" [(ngModel)]="this.distance" (ngModelChange)="this.changeAlgorithm();">
                                     <option value="euklid">Euklid</option>
                                     <option value="manhattan">Manhattan</option>
                                     <option value="diagonalShortcut">Diagonal Shortcut</option>
@@ -69,7 +69,7 @@
                                 <label> ms step interval</label>
                             </tr>
                             <tr>
-                                <input type="number" name="viewradius" class="inputWithLabel" value="" [(ngModel)]="this.robotViewRadius" ngModelChange="this.showViewRadius()"/>
+                                <input type="number" name="viewradius" class="inputWithLabel" value="" [(ngModel)]="this.robotViewRadius" (ngModelChange)="this.showViewRadius()"/>
                                 <label> View Radius </label>
                             </tr>
                             <tr>

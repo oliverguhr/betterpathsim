@@ -80,14 +80,32 @@ export class Map {
     }
 
     public drawViewRadius(start: Cell) {
-        console.log("Radius zeichnen! "+this.robotRadius+ " " +start.position.x,start.position.y);
+        for(var row = 0; row < this.rows; row++) {
+            for(var col = 0; col < this.cols; col++) {
+                var cell = this.getCell(col, row);
 
-        /*
-        Hier Algorithmus implementieren, welcher das Cell-Array der Map druch geht und dabei abhängig von der Position
-        des Roboters und der größe seines Sichtradius die entsprechenden Zellen markiert und den Zellen am Rand des Sichtradius
-        die CSS Klassen zuweist, die den Rand des Sichtradius zeichnen. 
-        */
+                if( this.checkCellInView(cell,start) ) {
+                    this.updateCellOnPosition(new Position(cell.position.x,cell.position.y), (cell: Cell) => {
+                        cell.inView = true;
+                        return cell;
+                    });
+                } else {
+                    //Wird sehr oft unnötig aufgerufen..
+                    this.updateCellOnPosition(new Position(cell.position.x,cell.position.y), (cell: Cell) => {
+                        cell.inView = false;
+                        return cell;
+                    });
+                }
+            }
+        }
+    }
 
+
+    public checkCellInView (cell: Cell, start:Cell) {
+        return  cell.position.x >= start.position.x - this.robotRadius && 
+                cell.position.x <= start.position.x + this.robotRadius && 
+                cell.position.y >= start.position.y - this.robotRadius && 
+                cell.position.y <= start.position.y + this.robotRadius;
     }
 
     /*##############################################

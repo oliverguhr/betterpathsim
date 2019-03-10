@@ -19,10 +19,12 @@ export class Cell {
   public color: any;
   public previous: Cell;
   public isOpen: boolean;
+  public inView: boolean;
 
   constructor(row: number, col: number, cellType = CellType.Free) {
     this.position = new Position(col, row);
     this.cellType = cellType;
+    this.inView = false;
   }
 
   /*################################################
@@ -60,6 +62,9 @@ export class Cell {
   }
   get isBlockable() {
     return this.isFree || this.isCurrent ||this.isVisited;
+  }
+  get isInView() {
+      return this.inView;
   }
 
   /*################################################

@@ -51,6 +51,10 @@ rect.forced {
     fill: #C8F;
 }
 
+rect.inView {
+    stroke: red;
+}
+
 line {
     stroke-width: 2px;
     stroke-linecap: round;

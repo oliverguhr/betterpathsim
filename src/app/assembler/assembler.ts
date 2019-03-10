@@ -238,10 +238,10 @@ export class Assembler implements OnInit {
             this.map.drawViewRadius(start);
             
             if (start.isGoal) {
-
                 clearTimeout(interval);
                 this.map.removeChangeListener(onMapUpdate);
                 this.robotIsMoving = false;
+
             } else {
                 this.visualizePathCosts();
                 if(lastPosition !== undefined)
@@ -333,6 +333,7 @@ export class Assembler implements OnInit {
             }
             this.map.updateCell(cell);
         }
+        console.log(cell.isInView);
     };
 
     mouseOverCell = (cell: Cell, event: any) => {
@@ -352,7 +353,7 @@ export class Assembler implements OnInit {
     };
 
     showViewRadius = () => {
-        console.log(this.robotViewRadius);
+        this.map.robotRadius = this.robotViewRadius;
     }
 
 }
