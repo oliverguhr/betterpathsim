@@ -149,7 +149,8 @@ h1 {
 }
 
 .controls fieldset {
-    display: inline;
+    display: inline-block;
+    vertical-align: top;
 }
 
 [hidden] { display: none !important;}
