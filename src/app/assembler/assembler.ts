@@ -93,10 +93,11 @@ export class Assembler implements OnInit {
         console.log(map.widthPx, map.heightPx);
 
         this.map.notifyOnChange((cell: Cell) => {
+            
             if (map.robotIsMoving) {
                 return;
             }
-    
+            
             try {
                 map.algorithmInstance = map.getAlgorithmInstance();
             } catch (e) {
@@ -107,6 +108,8 @@ export class Assembler implements OnInit {
 
             if (map.algorithmInstance.isInitialized) {
                 console.time(map.algorithm);
+                //hier prüfen, ob Zelle in Sichtbereich ist -> Ausgehend vom Roboter 
+                // - ohne Eigenschaft auf der Zelle.
                 map.algorithmInstance.mapUpdate([cell]);
                 console.timeEnd(map.algorithm);
                 map.visualizePathCosts();

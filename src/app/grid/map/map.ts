@@ -118,7 +118,7 @@ export class Map {
 
     public removeChangeListener(lambda: (cell: Cell) => void){
         console.log("old changeListener.length",this.changeListener.length);
-        _.remove(this.changeListener, x => x === lambda);
+        this.changeListener = this.changeListener.filter(x => x === lambda);
         console.log("new changeListener.length",this.changeListener.length);
     }
 
