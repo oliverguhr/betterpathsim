@@ -239,7 +239,7 @@ export class Assembler implements OnInit {
             let nextCell = pathFinder.calculatePath(start, goal) as Cell;            
             start = nextCell;
             this.map.drawViewRadius(start);
-            
+
             if (start.isGoal) {
                 clearTimeout(interval);
                 this.map.removeChangeListener(onMapUpdate);
@@ -336,7 +336,6 @@ export class Assembler implements OnInit {
             }
             this.map.updateCell(cell);
         }
-        console.log(cell.isInView);
     };
 
     mouseOverCell = (cell: Cell, event: any) => {

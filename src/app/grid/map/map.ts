@@ -10,8 +10,12 @@ import {Position} from '../position/position';
 })
 export class Map {
 
-  grid: Array< Array<Cell> >; // = Cell[][]
-  private changeListener: Array<(cell: Cell) => void>;
+    grid: Array< Array<Cell> >; // = Cell[][]
+    private changeListener: Array<(cell: Cell) => void>;
+
+    viewRadiusX: Number;
+    viewRadiusY: Number;
+    viewRadiusR: Number;
 
     constructor(public rows: number, public cols: number, public robotRadius: number) { 
         this.grid = [ [], ];
@@ -79,25 +83,11 @@ export class Map {
         })
     }
 
+    
     public drawViewRadius(start: Cell) {
-        for(var row = 0; row < this.rows; row++) {
-            for(var col = 0; col < this.cols; col++) {
-                var cell = this.getCell(col, row);
-
-                if( this.checkCellInView(cell,start) ) {
-                    this.updateCellOnPosition(new Position(cell.position.x,cell.position.y), (cell: Cell) => {
-                        cell.inView = true;
-                        return cell;
-                    });
-                } else {
-                    //Wird sehr oft unnötig aufgerufen..
-                    this.updateCellOnPosition(new Position(cell.position.x,cell.position.y), (cell: Cell) => {
-                        cell.inView = false;
-                        return cell;
-                    });
-                }
-            }
-        }
+        this.viewRadiusX = (start.position.x*25) + 25/2;
+        this.viewRadiusY = (start.position.y*25) + 25/2;
+        this.viewRadiusR = (this.robotRadius*25) + 25/2;
     }
 
 
@@ -135,3 +125,25 @@ export class Map {
         }
     }
 }
+
+
+/*
+       for(var row = 0; row < this.rows; row++) {
+            for(var col = 0; col < this.cols; col++) {
+                var cell = this.getCell(col, row);
+
+                if( this.checkCellInView(cell,start) ) {
+                    this.updateCellOnPosition(new Position(cell.position.x,cell.position.y), (cell: Cell) => {
+                        cell.inView = true;
+                        return cell;
+                    });
+                } else {
+                    //Wird sehr oft unnötig aufgerufen..
+                    this.updateCellOnPosition(new Position(cell.position.x,cell.position.y), (cell: Cell) => {
+                        cell.inView = false;
+                        return cell;
+                    });
+                }
+            }
+        }
+*/

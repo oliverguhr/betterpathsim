@@ -105,7 +105,16 @@
                     [ngStyle]="{'fill': cell.color}"
                     >
             </rect>
-    
         </g>
+        
+        
+        <circle attr.cx = "{{this.map.viewRadiusX}}" 
+                attr.cy = "{{this.map.viewRadiusY}}" 
+                [attr.r] = "this.map.viewRadiusR" 
+                stroke   = "black"
+                fill     = "none"
+                >
+        </circle>
+        
     </svg> 
 </div>
