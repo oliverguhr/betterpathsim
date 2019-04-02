@@ -48,6 +48,13 @@ export class Assembler implements OnInit {
 
     hoveredCell: any;
 
+    //Variablen zur Berechnung ob Zellposition im Sichtradius
+    cellX: number;
+    cellY: number;
+    robotX: number;
+    robotY: number;
+    dist: number;
+
     @Input() cols :number;
     @Input() rows :number;
 
@@ -94,9 +101,9 @@ export class Assembler implements OnInit {
 
         this.map.notifyOnChange((cell: Cell) => {
             
-            if (map.robotIsMoving) {
+            /*if (map.robotIsMoving) {
                 return;
-            }
+            }*/
             
             try {
                 map.algorithmInstance = map.getAlgorithmInstance();
@@ -108,9 +115,24 @@ export class Assembler implements OnInit {
 
             if (map.algorithmInstance.isInitialized) {
                 console.time(map.algorithm);
+                /*
                 //hier prüfen, ob Zelle in Sichtbereich ist -> Ausgehend vom Roboter 
                 // - ohne Eigenschaft auf der Zelle.
+
+                //this.cellX = cell.position.x - 25/2;
+                //this.cellY = cell.position.y - 25/2;
+
+                this.cellX = cell.position.x;
+                this.cellY = cell.position.y;
+
+                this.robotX = this.map.viewRadiusX - 25/2;
+                this.robotY = this.map.viewRadiusY - 25/2;
+
+                this.dist =  Math.sqrt( Math.pow((this.robotX - this.cellX),2) + Math.pow((this.robotY- this.cellY),2) );
+
+                if(this.dist <= this.map.viewRadiusR) */
                 map.algorithmInstance.mapUpdate([cell]);
+
                 console.timeEnd(map.algorithm);
                 map.visualizePathCosts();
                 map.calculateStatistic();

@@ -13,14 +13,18 @@ export class Map {
     grid: Array< Array<Cell> >; // = Cell[][]
     private changeListener: Array<(cell: Cell) => void>;
 
-    viewRadiusX: Number;
-    viewRadiusY: Number;
-    viewRadiusR: Number;
+     viewRadiusX: number;
+    viewRadiusY: number;
+    viewRadiusR: number;
 
     constructor(public rows: number, public cols: number, public robotRadius: number) { 
         this.grid = [ [], ];
         this.changeListener = new Array<(cell: Cell) => void>();
         this.initializeGrid();
+
+        this.viewRadiusX = 0;
+        this.viewRadiusY = 0;
+        this.viewRadiusR = 0;
     }
 
     /*##############################################
