@@ -148,7 +148,7 @@ h1 {
     width: 100%;
 }
 
-.controls fieldset {
+.controls fieldset, h1 {
     display: inline-block;
     vertical-align: top;
 }
@@ -175,11 +175,6 @@ label, .inputdiv {
     width: 9.6em;
 }
 
-.controls label>input {
-    display: inline;
-    vertical-align: top;
-}
-
 .inputWithLabel{
     width: calc(100% - 130px) !important;
     float: left;
@@ -188,4 +183,11 @@ label, .inputdiv {
 
 .ng-cloak{
     display: none !important;
+}
+
+#header {
+    color: #369;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 50px;
+    margin-right: 0.5em;
 }

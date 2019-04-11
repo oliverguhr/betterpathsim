@@ -1,16 +1,29 @@
 <div>
     <div class="controls">
-            <form>
+        <form>
+                <h1 id="header">Pathsim</h1>
                 <fieldset>
                     <legend>Map Options</legend>
-                    <input type="button" (click)="this.cleanMap()" value="Reset map" />
-                    <input type="button" (click)="this.addDynamicObstacle()" value="Add moving block" />
-                    <input type="button" (click)="this.addRandomObstacles()" value="Add random blocks" />
-                    <input type="button" (click)="this.addWalls()" value="Add Walls" />
-
-                    <label for="algorithm">
-                        <input type="checkbox" name="visualizePathCosts" (click)="this.visualizePathCosts()" [(ngModel)]="this.isVisualizePathEnabled" /> Visualize path cost
-                    </label>
+                    <table> 
+                        <tr>
+                            <td>
+                                <input type="button" (click)="this.cleanMap()" value="Reset map" />
+                                <input type="button" (click)="this.addDynamicObstacle()" value="Add moving block" />
+                            </td>
+                            <td>
+                                <input type="button" (click)="this.addRandomObstacles()" value="Add random blocks" />
+                                <input type="button" (click)="this.addWalls()" value="Add Walls" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="visualizePathCosts" (click)="this.visualizePathCosts()" [(ngModel)]="this.isVisualizePathEnabled" />
+                            </td>
+                            <td>
+                                <label for="visualizePathCosts">  Visualize path cost </label>  
+                            </td>
+                        </tr>
+                    </table>
                 </fieldset>
 
                 <fieldset>
@@ -27,6 +40,10 @@
                                     <option value="MPGAAStar">MPGAA*</option>
                                 </select>
                                 </td>
+                                <td>
+                                    <input type="number" name="timestepinterval" class="inputWithLabel"  value="" [(ngModel)]="this.robotStepInterval" [disabled]="this.robotIsMoving"/> 
+                                    <label> ms step interval</label>
+                                </td>
                             </tr>
                             <tr>
                                 <td> <span>Distance:</span> </td>
@@ -36,6 +53,10 @@
                                     <option value="diagonalShortcut">Diagonal Shortcut</option>
                                 </select>
                                 </td>
+                                <td>
+                                        <input type="number" name="viewradius" class="inputWithLabel" value="" [(ngModel)]="this.robotViewRadius" (ngModelChange)="this.showViewRadius()"/>
+                                        <label> View Radius </label>
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -43,19 +64,7 @@
                     <input type="button" (click)="this.runStepByStep()" value="Run step by step" [hidden]="this.algorithm == 'LpaStar' || this.algorithm == 'MPGAAStar'|| this.algorithm == 'GAAStar'" />
                     
                     <div [hidden]="this.algorithm == 'LpaStar' || this.algorithm == 'Dijkstra'|| this.algorithm == 'AStar'">
-                        <table>
-                            <tr>
-                                <input type="number" name="timestepinterval" class="inputWithLabel"  value="" [(ngModel)]="this.robotStepInterval" [disabled]="this.robotIsMoving"/> 
-                                <label> ms step interval</label>
-                            </tr>
-                            <tr>
-                                <input type="number" name="viewradius" class="inputWithLabel" value="" [(ngModel)]="this.robotViewRadius" (ngModelChange)="this.showViewRadius()"/>
-                                <label> View Radius </label>
-                            </tr>
-                            <tr>
-                                <input type="button" (click)="this.startRobot()" value="Start Robot" [disabled]="this.robotIsMoving" />
-                            </tr>
-                        </table>
+                        <input type="button" (click)="this.startRobot()" value="Start Robot" [disabled]="this.robotIsMoving" />
                     </div>
                 </fieldset>
 
