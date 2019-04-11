@@ -13,7 +13,7 @@ export class Map {
     grid: Array< Array<Cell> >; // = Cell[][]
     private changeListener: Array<(cell: Cell) => void>;
 
-     viewRadiusX: number;
+    viewRadiusX: number;
     viewRadiusY: number;
     viewRadiusR: number;
 

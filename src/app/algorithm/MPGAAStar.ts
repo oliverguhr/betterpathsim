@@ -35,6 +35,11 @@ export class MPGAAStar extends PathAlgorithm {
     /** keep track of those states which support the h-values of other states */
     private support: TypMappedDictionary<Cell, Cell>;
     private robot: Moveable;
+    
+    cellX: number;
+    cellY: number;
+    robotX: number;
+    robotY: number;
 
     constructor(public map: Map, private visibilityRange: number) {
         super();
@@ -260,10 +265,18 @@ export class MPGAAStar extends PathAlgorithm {
 
             We remove all cells with increased edge costs from the current path.
             In our case, we remove blocked cells from the path.
-        */        
+        */     
 
-        let distance = Distance.euclid(changedCell, this.currentCell);
-        if (distance < this.visibilityRange) { // arcs in the range of visibility from s
+        let cellX = changedCell.position.x;
+        let cellY = changedCell.position.y;
+
+        let robotX = this.start.position.x;
+        let robotY = this.start.position.y;
+
+        let distance =  Math.sqrt( Math.pow((robotX - cellX),2) + Math.pow((robotY- cellY),2) );
+
+        if (distance <= this.visibilityRange) { // arcs in the range of visibility from s
+
             if (changedCell.isBlocked) {
                 this.next.delete(changedCell);
             } else {
