@@ -157,10 +157,10 @@ export class Assembler implements OnInit {
                 algorithm = new AStar(this.map);
                 break;
             case "GAAStar":
-                algorithm = new GAAStar(this.map, this.map.robotRadius);
+                algorithm = new GAAStar(this.map);
                 break;
             default:
-                algorithm = new MPGAAStar(this.map, this.map.robotRadius);
+                algorithm = new MPGAAStar(this.map);
                 break;
         }
     

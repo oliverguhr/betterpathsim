@@ -41,7 +41,7 @@ export class MPGAAStar extends PathAlgorithm {
     robotX: number;
     robotY: number;
 
-    constructor(public map: Map, private visibilityRange: number) {
+    constructor(public map: Map) {
         super();
 
         this.openCells = new SimplePriorityQueue<Cell, number>((a, b) => a - b, 0);
@@ -275,7 +275,7 @@ export class MPGAAStar extends PathAlgorithm {
 
         let distance =  Math.sqrt( Math.pow((robotX - cellX),2) + Math.pow((robotY- cellY),2) );
 
-        if (distance <= this.visibilityRange) { // arcs in the range of visibility from s
+        if (distance <= this.map.robotRadius) { // arcs in the range of visibility from s
 
             if (changedCell.isBlocked) {
                 this.next.delete(changedCell);

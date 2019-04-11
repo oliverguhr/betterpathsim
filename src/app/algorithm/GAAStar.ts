@@ -34,7 +34,7 @@ export class GAAStar extends PathAlgorithm {
     private parent: TypMappedDictionary<Cell, Cell>;
     private robot: Moveable;
 
-    constructor(public map: Map, private visibiltyRange: number) {
+    constructor(public map: Map) {
         super();
 
         this.closedCells = new SimplePriorityQueue<Cell, number>((a, b) => a - b, 0);
@@ -251,7 +251,7 @@ export class GAAStar extends PathAlgorithm {
             let distance =  Math.sqrt( Math.pow((robotX - cellX),2) + Math.pow((robotY- cellY),2) );
 
             //let distance = Distance.euclid(changedCell, this.currentCell);
-            if (distance < this.visibiltyRange) { // arcs in the range of visibility from s
+            if (distance < this.map.robotRadius) { // arcs in the range of visibility from s
                 if (changedCell.isBlocked) {
                     this.next.delete(changedCell);
                 } else {
