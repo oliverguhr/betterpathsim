@@ -1,5 +1,5 @@
 import {Distance} from "./Distance";
-import {Cell, Map, CellType} from "../grid/index";
+import {Cell, Map, CellType, CellDisplayType} from "../grid/index";
 import * as _ from "lodash";
 
 export class PathAlgorithm {
@@ -18,6 +18,7 @@ export class PathAlgorithm {
           }
           node = node.previous;
         }*/
+        this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index))
         let start = this.map.getStartCell();
         let node = this.map.getGoalCell();
         let nodeDistance = (cell: Cell) => cell.distance;
@@ -34,7 +35,7 @@ export class PathAlgorithm {
             node = _.minBy(predecessors, nodeDistance);
             if (node.isVisited) {
                 node.type = CellType.Current;
-                node.color = undefined;
+                node.addDisplayType(CellDisplayType.Path)
             }
             // console.log("paint node"+ node.toString());
         } while (node !== start);

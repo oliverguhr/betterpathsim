@@ -1,19 +1,24 @@
 import * as _ from "lodash";
-import { Map } from "../grid/index";
+import { Map, Cell, CellDisplayType } from "../grid/index";
+import { createElement } from '@angular/core/src/view/element';
 
 export class PathCostVisualizer {
     constructor(private map: Map) {
     }
 
     public paint() {
+        //remove old gradient colors        
+        this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(300))
+
         let visitedCells = this.map.cells.filter(cell => cell.isVisited && Number.isFinite(cell.distance));
         if(visitedCells.length == 0)
             return;
         let maxDistance = _.maxBy(visitedCells, cell => cell.distance).distance;
         let distanceMulti = 1 / maxDistance;
 
-        visitedCells.forEach(cell => {
-            cell.color = this.numberToColorHsl(1 - (cell.distance * distanceMulti), 0, 1);
+        visitedCells.forEach(cell => {            
+            let color = this.numberToColorHsl(1 - (cell.distance * distanceMulti), 0, 1);
+            cell.addDisplayType(CellDisplayType.Gradient(color))
         });
     }
 

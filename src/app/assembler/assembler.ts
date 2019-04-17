@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { Map, Moveable, CellType, Position, Cell } from "../grid/index";
+import { Map, Moveable, CellType, Position, Cell, CellDisplayType } from "../grid/index";
 import { LpaStar, AStar, Dijkstra, Distance, MPGAAStar, GAAStar } from "../algorithm/index";
 
 import { DynmicObstacleGenerator, PathCostVisualizer, ObstacleGenerator, MazeGenerator } from '../tools';
+import { debug } from 'util';
 
 @Component({
   selector: 'app-assembler',
@@ -331,14 +332,19 @@ export class Assembler implements OnInit {
             this.editGoalCell = false;
         } else {
             switch (cell.type) {
-                case CellType.Blocked:
+                case CellType.Blocked:                
                     cell.type = CellType.Free;
+                    debugger;
+                    cell.removeCurrentDisplayType()
+                    cell.addDisplayType(CellDisplayType.Free)
                     break;
                 case CellType.Current:
                 case CellType.Visited:
-                case CellType.Free:
-                    cell.color = undefined;                   
-                    cell.type = CellType.Blocked;
+                case CellType.Free:   
+                    //todo: add new method to cell   
+                    debugger                          
+                    cell.type = CellType.Blocked;                    
+                    cell.addDisplayType(CellDisplayType.Wall)
                     break;
                 case CellType.Start:
                     this.editStartCell = true;

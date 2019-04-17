@@ -93,6 +93,10 @@
                          <tr [hidden]="!this.hoveredCell.heuristicDistance">
                           <td>heuristic Distance h(x)</td><td>{{this.hoveredCell.heuristicDistance | number:'.0-3'}}<td> 
                         </tr>                           
+
+                        <tr >
+                          <td>color h(x)</td><td>{{this.hoveredCell.color}}<td> 
+                        </tr>                           
                       </tbody>
                     </table>
                 </fieldset>
@@ -107,8 +111,7 @@
                     attr.x.px="{{cell.position.x * this.cellSize}}" 
                     attr.y.px="{{cell.position.y * this.cellSize}}" 
                     attr.width.px="{{this.cellSize}}" 
-                    attr.height.px="{{this.cellSize}}" 
-                    [ngClass]="{'blocked': cell.isBlocked, 'current': cell.isCurrent, 'closed': cell.isVisited, 'start': cell.isStart, 'goal': cell.isGoal, 'inView': cell.isInView}" 
+                    attr.height.px="{{this.cellSize}}"                     
                     (mousedown)="this.clickOnCell(cell)" 
                     (mouseover)="this.mouseOverCell(cell, $event)" 
                     [ngStyle]="{'fill': cell.color}"

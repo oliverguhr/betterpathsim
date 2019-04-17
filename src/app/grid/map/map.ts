@@ -53,7 +53,7 @@ export class Map {
         return this.cells.find(cell => cell.isGoal);
     }
 
-    get cells() {
+    get cells():Cell[] {
         return _.flatten(this.grid);
     }
 
@@ -130,24 +130,3 @@ export class Map {
     }
 }
 
-
-/*
-       for(var row = 0; row < this.rows; row++) {
-            for(var col = 0; col < this.cols; col++) {
-                var cell = this.getCell(col, row);
-
-                if( this.checkCellInView(cell,start) ) {
-                    this.updateCellOnPosition(new Position(cell.position.x,cell.position.y), (cell: Cell) => {
-                        cell.inView = true;
-                        return cell;
-                    });
-                } else {
-                    //Wird sehr oft unnötig aufgerufen..
-                    this.updateCellOnPosition(new Position(cell.position.x,cell.position.y), (cell: Cell) => {
-                        cell.inView = false;
-                        return cell;
-                    });
-                }
-            }
-        }
-*/
