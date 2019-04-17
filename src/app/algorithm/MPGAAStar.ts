@@ -266,30 +266,16 @@ export class MPGAAStar extends PathAlgorithm {
             We remove all cells with increased edge costs from the current path.
             In our case, we remove blocked cells from the path.
         */     
-
-        let cellX = changedCell.position.x;
-        let cellY = changedCell.position.y;
-
-        let robotX = this.start.position.x;
-        let robotY = this.start.position.y;
-
-        let distance =  Math.sqrt( Math.pow((robotX - cellX),2) + Math.pow((robotY- cellY),2) );
-
-        if (distance <= this.map.robotRadius) { // arcs in the range of visibility from s
-
-            if (changedCell.isBlocked) {
-                this.next.delete(changedCell);
-            } else {
-                /*
-                    Todo: Fix this. 
-                    ReestablishConsistency should only be called, if the cell was blocked before. 
-                    Since the map does not provide the old value yet, we can't tell if the state has changed.
-                    However, until this is fixed we invoke it every time. This should not hurt, but reduce the performance. 
-                */
-                this.reestablishConsistency(changedCell);
-            }
-        } else {
-            console.info("cell change ignored, cell out of sight", changedCell);
-        }
+        if (changedCell.isBlocked) {
+             this.next.delete(changedCell);
+         } else {
+             /*
+                 Todo: Fix this. 
+                 ReestablishConsistency should only be called, if the cell was blocked before. 
+                 Since the map does not provide the old value yet, we can't tell if the state has changed.
+                 However, until this is fixed we invoke it every time. This should not hurt, but reduce the performance. 
+             */
+             this.reestablishConsistency(changedCell);
+         }        
     }
 }

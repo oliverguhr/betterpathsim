@@ -231,7 +231,14 @@ export class Assembler implements OnInit {
         this.map.resetPath();
         let pathFinder = this.getAlgorithmInstance();
 
-        let onMapUpdate = (cell: Cell) => { pathFinder.observe(cell) };
+        let onMapUpdate = (cell: Cell) => {             
+            //since we are using the old robot position, we need to subtract 1 from the distance
+            let distance = Distance.euclid(cell,this.algorithmInstance.start) - 1
+            if(distance <= this.map.robotRadius)
+            {
+                pathFinder.observe(cell) 
+            }
+        };
         this.map.notifyOnChange(onMapUpdate);
 
         let start = this.map.getStartCell() as Cell;
