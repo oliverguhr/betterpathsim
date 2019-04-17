@@ -2,6 +2,8 @@ import { Component, Sanitizer } from '@angular/core';
 import { CellType } from '../cell-type/cell-type';
 import { Position } from '../position/position';
 import { DomSanitizer } from '@angular/platform-browser';
+import CellDisplayType from '../cell-display-type/cell-display-type';
+import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'app-cell'
@@ -19,6 +21,7 @@ export class Cell {
   public color: any;
   public previous: Cell;
   public isOpen: boolean;
+  private content: CellDisplayType[];
 
   constructor(row: number, col: number, cellType = CellType.Free) {
     this.position = new Position(col, row);
@@ -29,6 +32,13 @@ export class Cell {
             Getter / Setter - CellTyp
   #################################################*/
 
+  set displayType(type: CellDisplayType){
+    this.content.push(type)
+  
+  }
+  get displayType(){
+    return this.cellType[0]
+  }
   set type(cellType) {
     this.cellType = cellType;
   }
