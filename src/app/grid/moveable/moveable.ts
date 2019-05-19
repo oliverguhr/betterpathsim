@@ -31,7 +31,7 @@ export class Moveable {
     this.map.updateCellOnPosition(position, (cell: Cell) => {
         cell.cellType = this.cellType;
 
-        debugger;
+        //debugger;
         if(this.cellType === CellType.Goal) {cell.addDisplayType(CellDisplayType.Goal)}
         if(this.cellType === CellType.Start) {cell.addDisplayType(CellDisplayType.Start)}        
 

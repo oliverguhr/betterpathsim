@@ -7,12 +7,18 @@ export class PathCostVisualizer {
     }
 
     public paint() {
+        //debugger
+        
+        let visitedCells = this.map.cells.filter(cell => cell.isVisited && Number.isFinite(cell.distance));
+
+        console.log(visitedCells);
+
+        if(visitedCells.length == 0)
+            return;
+
         //remove old gradient colors        
         this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(300))
 
-        let visitedCells = this.map.cells.filter(cell => cell.isVisited && Number.isFinite(cell.distance));
-        if(visitedCells.length == 0)
-            return;
         let maxDistance = _.maxBy(visitedCells, cell => cell.distance).distance;
         let distanceMulti = 1 / maxDistance;
 

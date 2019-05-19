@@ -132,6 +132,8 @@ export class MPGAAStar extends PathAlgorithm {
         // g(x) accumulated costs from start to current position
         // h(x) the estimated costs from the cell to the goal
 
+        let first = true;
+
         this.initializeState(init);
         this.parent.set(init, undefined);
 
@@ -147,10 +149,24 @@ export class MPGAAStar extends PathAlgorithm {
 
         while (!this.openCells.isEmpty) {
             let s = this.openCells.pop();
+
+           // debugger;
+
             if (this.GoalCondition(s)) {
                 return s;
             }
 
+            /*
+            Assembler kann das Rücksetzen des Pfades nicht machen, da Assembler nie weiß, wann der A*-Algorithmus wirklich einen neuen Pfad suchen muss.
+            Das weiß nur der Funktionsaufruf hier über die Bedingung -- if (this.GoalCondition(s)) --
+
+            */
+
+            //cleanup old visited cells, to show which cells are calculated by the algorithm
+            if(first) {
+                this.map.cells.filter((x:Cell) => x.isVisited).forEach((x:Cell) =>{ x.type = CellType.Free; x.color = undefined});
+                first = false;
+            }
             this.closedCells.push(s);
 
             let neighbors = this.getNeighbors(s, cell => !cell.isBlocked);
@@ -158,6 +174,7 @@ export class MPGAAStar extends PathAlgorithm {
             for (let neighbor of neighbors) {
                 this.initializeState(neighbor);
                 let neighborsDistance = s.distance + this.distance(neighbor, s);
+
                 if (neighbor.distance > neighborsDistance) {
                     neighbor.distance = neighborsDistance;
                     this.parent.set(neighbor, s);
@@ -190,8 +207,7 @@ export class MPGAAStar extends PathAlgorithm {
             due to the limitations of floating point precision. 
             To solve this issue we assume that a error less then 1e-14 is acceptable.
         */
-        while (this.next.get(s) !== undefined &&
-            1e-14 > Math.abs(s.heuristicDistance - (this.next.get(s).heuristicDistance + this.distance(s, this.next.get(s))))) {
+        while (this.next.get(s) !== undefined && 1e-14 > Math.abs(s.heuristicDistance - (this.next.get(s).heuristicDistance + this.distance(s, this.next.get(s))))) {
             s = this.next.get(s);
         }
         return s.isGoal;

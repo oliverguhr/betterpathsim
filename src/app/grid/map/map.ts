@@ -59,9 +59,9 @@ export class Map {
 
     public getCell(x: number, y: number) {
         if(x >= 0 && y >= 0 && x < this.cols && y < this.rows) {
-        return this.grid[y][x];
+            return this.grid[y][x];
         } else {
-        return undefined;
+            return undefined;
         }
     }
 

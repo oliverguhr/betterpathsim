@@ -235,8 +235,7 @@ export class Assembler implements OnInit {
         let onMapUpdate = (cell: Cell) => {             
             //since we are using the old robot position, we need to subtract 1 from the distance
             let distance = Distance.euclid(cell,this.algorithmInstance.start) - 1
-            if(distance <= this.map.robotRadius)
-            {
+            if(distance <= this.map.robotRadius) {
                 pathFinder.observe(cell) 
             }
         };
@@ -249,9 +248,9 @@ export class Assembler implements OnInit {
         this.map.drawViewRadius(start);
 
         let interval = setInterval (() => {
-            //cleanup old visited cells, to show which cells are calculated by the algorithm 
-            this.map.cells.filter((x:Cell) => x.isVisited).forEach((x:Cell) =>{ x.type = CellType.Free; x.color = undefined});
-            let nextCell = pathFinder.calculatePath(start, goal) as Cell;            
+
+            let nextCell = pathFinder.calculatePath(start, goal) as Cell;
+
             start = nextCell;
             this.map.drawViewRadius(start);
 
@@ -334,7 +333,7 @@ export class Assembler implements OnInit {
             switch (cell.type) {
                 case CellType.Blocked:                
                     cell.type = CellType.Free;
-                    debugger;
+                    // debugger;
                     cell.removeCurrentDisplayType()
                     cell.addDisplayType(CellDisplayType.Free)
                     break;
@@ -342,7 +341,7 @@ export class Assembler implements OnInit {
                 case CellType.Visited:
                 case CellType.Free:   
                     //todo: add new method to cell   
-                    debugger                          
+                    // debugger                          
                     cell.type = CellType.Blocked;                    
                     cell.addDisplayType(CellDisplayType.Wall)
                     break;
