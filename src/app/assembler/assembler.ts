@@ -195,11 +195,11 @@ export class Assembler implements OnInit {
     calculatePath = () => {
         let pathFinder = this.getAlgorithmInstance();
         if (pathFinder.isInitialized === undefined || pathFinder.isInitialized === false) {
-            console.time(this.algorithm);
+           // console.time(this.algorithm);
             // console.profile("Dijkstra");
             pathFinder.run();
             // console.profileEnd("Dijkstra");
-            console.timeEnd(this.algorithm);
+           // console.timeEnd(this.algorithm);
         }
         this.visualizePathCosts();
         this.calculateStatistic();
@@ -335,7 +335,7 @@ export class Assembler implements OnInit {
                     cell.type = CellType.Free;
                     // debugger;
                     cell.removeCurrentDisplayType()
-                    cell.addDisplayType(CellDisplayType.Free)
+                    //cell.addDisplayType(CellDisplayType.Free)
                     break;
                 case CellType.Current:
                 case CellType.Visited:

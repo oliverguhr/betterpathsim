@@ -4,6 +4,7 @@ import { Position } from '../position/position';
 import { DomSanitizer } from '@angular/platform-browser';
 import {CellDisplayType} from '../cell-display-type/cell-display-type';
 import { Content } from '@angular/compiler/src/render3/r3_ast';
+import { CellPriorityQueue } from 'src/app/tools';
 
 @Component({
   selector: 'app-cell'
@@ -22,42 +23,45 @@ export class Cell {
   public previous: Cell;
   public isOpen: boolean;
   private content: CellDisplayType[] = [];
+  //private content: CellPriorityQueue<CellDisplayType>;
 
   constructor(row: number, col: number, cellType = CellType.Free) {
     this.position = new Position(col, row);
-    this.cellType = cellType;        
+    this.cellType = cellType;
+    
+    //this.content = new CellPriorityQueue((a, b) => a - b)
+
     this.addDisplayType(CellDisplayType.Free)
   }
 
-
   public addDisplayType(type: CellDisplayType){    
-    this.content.push(type)  
+    this.content.push(type)
     this.content = this.content.sort(x => x.index).reverse()
+    console.log("Adding!");
+    //console.log(this.position)  
     this.color = this.getCurrentDisplayType().color
   }
 
-
   public removeCurrentDisplayType(){
+    console.log("Removing!")
     this.content.shift()
     this.color = this.getCurrentDisplayType().color
   }
-
 
   public removeDisplayType(type: CellDisplayType){
     this.content = this.content.filter(x => type != x)
     this.color = this.getCurrentDisplayType().color
   }
 
+
   public removeDisplayTypeByIndex(index:number){
     this.content = this.content.filter(x => x.index !== index)
     this.color = this.getCurrentDisplayType().color
   }
 
-
   public getCurrentDisplayType(){    
     return this.content[0]
   }
-
 
   /*################################################
             Getter / Setter - CellTyp
@@ -111,3 +115,35 @@ export class Cell {
   }
 
 }
+
+
+/*
+public addDisplayType(type: CellDisplayType){  
+    this.content.insert(type) 
+    this.color = this.getCurrentDisplayType().color
+    //console.log(this.color);
+}
+
+
+public removeCurrentDisplayType(){
+    this.content.pop()
+    this.color = this.getCurrentDisplayType().color
+}
+
+
+public removeDisplayType(type: CellDisplayType){
+    this.content.remove(type)
+    this.color = this.getCurrentDisplayType().color
+}
+
+
+public removeDisplayTypeByIndex(index:number){
+    this.content.removeByIndex(index)
+    this.color = this.getCurrentDisplayType().color
+}
+
+
+public getCurrentDisplayType(){    
+    return this.content.topDisplayType()
+}
+*/

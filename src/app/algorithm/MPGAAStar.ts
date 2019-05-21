@@ -112,7 +112,8 @@ export class MPGAAStar extends PathAlgorithm {
         this.calculatePath(this.map.getStartCell(), this.map.getGoalCell());
     }
 
-    private buildPath(s: Cell): void {                
+    private buildPath(s: Cell): void { 
+        console.log("Zeichne Weg!")               
         while (s !== this.start) {
             if (!(s.isGoal || s.isStart)) {
                 s.type = CellType.Current;
