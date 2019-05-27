@@ -36,6 +36,11 @@ export class SimplePriorityQueue<Telement, Tkey> {
         }
     }
 
+    public peek() {
+        return this.items[0]
+    }
+
+
     public pop() {
         return this.items.shift();
     }
