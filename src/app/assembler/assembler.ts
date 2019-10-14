@@ -42,6 +42,7 @@ export class Assembler implements OnInit {
     stat: any;
     start: any;
     goal: any;
+    robot: any;
     cellSize: number;
     widthPx: number;
     heightPx: number;
@@ -78,7 +79,8 @@ export class Assembler implements OnInit {
         map.stat = {};
         map.start = undefined;
         map.goal = undefined;
-    
+        map.robot = undefined;
+
         //###########################################################
         //  this.map.initializeMap();  -- Map-Initialisierung
         //###########################################################
@@ -106,12 +108,12 @@ export class Assembler implements OnInit {
 
                 console.log("==================================")
                 console.log("notifyOnChange");
-
+                /*
                 if (map.robotIsMoving) {
                     console.log("Robot moved - abbruch der Notify!");
                     return;
                 }
-
+*/
                 
                 try {
                     map.algorithmInstance = map.getAlgorithmInstance();
@@ -246,10 +248,17 @@ export class Assembler implements OnInit {
     };
 
     startRobot = () => {
+
+        /*
+            Version mit Roboter als Moveable
+        */
+
+        
         this.robotIsMoving = true;
         this.map.resetPath();
         let pathFinder = this.getAlgorithmInstance();
 
+        /*
         let onMapUpdate = (cell: Cell) => {             
             //since we are using the old robot position, we need to subtract 1 from the distance
             let distance = Distance.euclid(cell,this.algorithmInstance.start) - 1
@@ -258,6 +267,7 @@ export class Assembler implements OnInit {
             }
         };
         this.map.notifyOnChange(onMapUpdate);
+        */
 
         let start = this.map.getStartCell() as Cell;
         let goal = this.map.getGoalCell();
@@ -274,7 +284,7 @@ export class Assembler implements OnInit {
 
             if (start.isGoal) {
                 clearTimeout(interval);
-                this.map.removeChangeListener(onMapUpdate);
+                //this.map.removeChangeListener(onMapUpdate);
                 this.robotIsMoving = false;
 
             } else {
@@ -288,6 +298,8 @@ export class Assembler implements OnInit {
                 nextCell.cellType = CellType.Visited;
                 nextCell.color = "#ee00f2";
                 lastPosition=nextCell;
+
+                this.start.moveTo(nextCell.position, true);
                 
             }
             this.calculateStatistic();

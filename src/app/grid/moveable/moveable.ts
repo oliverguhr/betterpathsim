@@ -16,7 +16,7 @@ export class Moveable {
 
   constructor(public map: Map, public cellType: CellType) {}
 
-  public moveTo(position: Position){
+  public moveTo(position: Position, moving: boolean = false){
 
     /*
         Update der alten Zelle des Moveables
@@ -52,7 +52,8 @@ export class Moveable {
 
         //debugger;
         if(this.cellType === CellType.Goal) {cell.addDisplayType(CellDisplayType.Goal)}
-        if(this.cellType === CellType.Start) {cell.addDisplayType(CellDisplayType.Start)}        
+        if(this.cellType === CellType.Start) {cell.addDisplayType(CellDisplayType.Start)}
+        if(this.cellType === CellType.Start && moving) {cell.addDisplayType(CellDisplayType.Robot)}        
 
         this.currentCell = cell;
         return cell;

@@ -30,8 +30,9 @@ export class CellDisplayType {
        return this._index
     }
 
-    public static Goal = new CellDisplayType(1000,"#F88")
-    public static Start = new CellDisplayType(1000,"#8F8")
+    public static Robot = new CellDisplayType(1000,"#ee00f2");
+    public static Goal = new CellDisplayType(950,"#F88")
+    public static Start = new CellDisplayType(950,"#8F8")
     public static Wall = new CellDisplayType(900,"#666")
     public static Path = new CellDisplayType(400,"#44F")
     public static MoveingObstacle = new CellDisplayType(800,"#BBF")
