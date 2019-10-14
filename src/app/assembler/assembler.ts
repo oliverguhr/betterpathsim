@@ -5,6 +5,7 @@ import { LpaStar, AStar, Dijkstra, Distance, MPGAAStar, GAAStar } from "../algor
 
 import { DynmicObstacleGenerator, PathCostVisualizer, ObstacleGenerator, MazeGenerator } from '../tools';
 import { debug } from 'util';
+import { IfStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-assembler',
@@ -100,33 +101,49 @@ export class Assembler implements OnInit {
 
         console.log(map.widthPx, map.heightPx);
 
-        this.map.notifyOnChange((cell: Cell) => {
-            
-            if (map.robotIsMoving) {
-                return;
-            }
-            
-            try {
-                map.algorithmInstance = map.getAlgorithmInstance();
-            } catch (e) {
-                console.error(e);
-                return;
-            }
-            map.map.resetPath();
+        this.map.notifyOnChange(
+            (cell: Cell) => {
 
-            if (map.algorithmInstance.isInitialized) {
-                console.time(map.algorithm);
+                console.log("==================================")
+                console.log("notifyOnChange");
 
-                map.algorithmInstance.mapUpdate([cell]);
+                if (map.robotIsMoving) {
+                    console.log("Robot moved - abbruch der Notify!");
+                    return;
+                }
 
-                console.timeEnd(map.algorithm);
-                map.visualizePathCosts();
-                map.calculateStatistic();
+                
+                try {
+                    map.algorithmInstance = map.getAlgorithmInstance();
+                } catch (e) {
+                    console.error(e);
+                    return;
+                }
+
+                console.log("Rücksetzen des Pfades!");
+                map.map.resetPath();
+
+                if (map.algorithmInstance.isInitialized) {
+                    console.time(map.algorithm);
+
+                    map.algorithmInstance.mapUpdate([cell]);
+
+                    console.timeEnd(map.algorithm);
+                    map.visualizePathCosts();
+                    map.calculateStatistic();
+                }
+                if (map.algorithmInstance.isInitialized === undefined || map.algorithmInstance.isInitialized === false) {
+                    console.log("Berechne neuen Pfad! - bisher kein Algorithmus initialisiert..");
+
+                    if(this.map.getStartCell() !== undefined && this.map.getGoalCell() !== undefined) {
+                        map.calculatePath();
+                    }     
+                    else {
+                        console.log("Keine Wegfindung möglich, da neuer Startpunkt/Zielpunkt noch nicht auf Map gesetzt.");
+                    }      
+                }
             }
-            if (map.algorithmInstance.isInitialized === undefined || map.algorithmInstance.isInitialized === false) {
-                map.calculatePath();
-            }
-        });
+        );
 
         this.robotStepInterval = 500;
         this.robotIsMoving = false;        
@@ -197,6 +214,7 @@ export class Assembler implements OnInit {
         if (pathFinder.isInitialized === undefined || pathFinder.isInitialized === false) {
            // console.time(this.algorithm);
             // console.profile("Dijkstra");
+            console.log("Suchalgorithmus wird gestartet..");
             pathFinder.run();
             // console.profileEnd("Dijkstra");
            // console.timeEnd(this.algorithm);
@@ -326,6 +344,7 @@ export class Assembler implements OnInit {
         if (this.editStartCell) {
             this.start.moveTo(cell.position);
             this.editStartCell = false;
+            console.log("Startzelle platziert!");
         } else if (this.editGoalCell) {
             this.goal.moveTo(cell.position);
             this.editGoalCell = false;
@@ -347,6 +366,10 @@ export class Assembler implements OnInit {
                     break;
                 case CellType.Start:
                     this.editStartCell = true;
+                    //console.log(cell);
+                    console.log("Startzelle geklickt");
+                    //cell = new Cell(cell.position.y,cell.position.x,CellType.Free);
+                    //console.log(cell);
                     break;
                 case CellType.Goal:
                     this.editGoalCell = true;

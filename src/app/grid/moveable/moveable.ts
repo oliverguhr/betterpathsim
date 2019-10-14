@@ -17,17 +17,36 @@ export class Moveable {
   constructor(public map: Map, public cellType: CellType) {}
 
   public moveTo(position: Position){
+
+    /*
+        Update der alten Zelle des Moveables
+        Wird beim ersten Platzieren des Moveables NICHT ausgeführt
+    */
+
+    console.log("erstes Update - Freigeben der alten Zelle des Moveable.");
+
     if (this.position !== undefined) {
-      this.map.updateCellOnPosition(this.position, (cell: Cell) => {
-        cell.cellType = CellType.Free;
+        this.map.updateCellOnPosition(this.position, 
+        (cell: Cell) => {
+            //cell.cellType = this.cellType;
 
-        cell.removeCurrentDisplayType()
+            cell.cellType = 0;
 
-        return cell;
-      });
+            cell.removeCurrentDisplayType();
+            return cell;
+        }
+        );  
     }
 
+    //Verschieben des Moveable
     this.position = position;
+
+    /*
+        Update der neuen Zelle des Moveable
+    */
+
+   console.log("zweites Update - Belegen der neuen Zelle des Moveable");
+
     this.map.updateCellOnPosition(position, (cell: Cell) => {
         cell.cellType = this.cellType;
 
@@ -38,5 +57,10 @@ export class Moveable {
         this.currentCell = cell;
         return cell;
     });
+
+    if(this.cellType == 4)
+    console.log("neue Position der Startzelle: "+this.position);
+    else if(this.cellType == 5)
+    console.log("neue Position der Zielzelle: "+this.position);
   }
 }

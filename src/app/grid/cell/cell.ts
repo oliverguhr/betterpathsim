@@ -4,7 +4,7 @@ import { Position } from '../position/position';
 import { DomSanitizer } from '@angular/platform-browser';
 import {CellDisplayType} from '../cell-display-type/cell-display-type';
 import { Content } from '@angular/compiler/src/render3/r3_ast';
-import { CellPriorityQueue } from 'src/app/tools';
+//import { CellPriorityQueue } from 'src/app/tools';
 
 @Component({
   selector: 'app-cell'
@@ -37,13 +37,10 @@ export class Cell {
   public addDisplayType(type: CellDisplayType){    
     this.content.push(type)
     this.content = this.content.sort(x => x.index).reverse()
-    console.log("Adding!");
-    //console.log(this.position)  
     this.color = this.getCurrentDisplayType().color
   }
 
   public removeCurrentDisplayType(){
-    console.log("Removing!")
     this.content.shift()
     this.color = this.getCurrentDisplayType().color
   }

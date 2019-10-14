@@ -108,8 +108,19 @@ export class MPGAAStar extends PathAlgorithm {
 
     public run() {
         /** This equals to a basic A* search */
+
+        console.log("--------- Wegfindung");
+
+        console.log("Rücksetzen des Pfades");
         this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index))
+
+        console.log("Neuberechnung des Pfades");
+
+        console.log("Startposition: "+this.map.getStartCell().position);
+        console.log("Zielposition: "+this.map.getGoalCell().position);
         this.calculatePath(this.map.getStartCell(), this.map.getGoalCell());
+
+        console.log("Wegfindung abgeschlossen -----------");
     }
 
     private buildPath(s: Cell): void { 

@@ -4,4 +4,4 @@ export * from "./DynmicObstacleGenerator";
 export * from "./PathCostVisualizer";
 export * from "./ObstacleGenerator";
 export * from "./MazeGenerator";
-export * from "./CellPriorityQueue";
+//export * from "./CellPriorityQueue";
