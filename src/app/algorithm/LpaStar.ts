@@ -1,4 +1,4 @@
-import { Cell, Map, CellType } from "../grid/index";
+import { Cell, Map, CellType, CellDisplayType } from "../grid/index";
 import { PathAlgorithm } from "./PathAlgorithm";
 import { SimplePriorityQueue } from "../tools/index";
 import * as _ from "lodash";
@@ -79,6 +79,7 @@ export class LpaStar extends PathAlgorithm {
         this.map.cells.forEach(cell => {
             if (Number.isFinite(cell.distance) && cell.isFree) {
                 cell.type = CellType.Visited;
+                cell.addDisplayType(CellDisplayType.Path);
             }
         });
 
@@ -98,6 +99,7 @@ export class LpaStar extends PathAlgorithm {
             if (node.isVisited) {
                 node.type = CellType.Current;
                 node.color = undefined;
+               
             }
             // console.log("paint node"+ node.toString());
         } while (node !== this.start);

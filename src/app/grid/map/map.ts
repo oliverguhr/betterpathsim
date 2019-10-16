@@ -4,6 +4,7 @@ import { _ } from 'underscore';
 import {Cell} from '../cell/cell';
 import {CellType} from '../cell-type/cell-type';
 import {Position} from '../position/position';
+import { CellDisplayType } from '..';
 
 @Component({
   selector: 'map'
@@ -75,8 +76,11 @@ export class Map {
 
     public resetPath() {
         this.cells.filter(cell => cell.isVisited || cell.isCurrent).forEach(cell => {
-        cell.type = CellType.Free;
-        cell.color = undefined;
+            cell.type = CellType.Free;
+            cell.color = undefined;
+            
+            cell.removeDisplayType(CellDisplayType.Path);
+            cell.removeDisplayType(CellDisplayType.Start);
         })
     }
 

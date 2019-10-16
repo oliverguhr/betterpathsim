@@ -133,6 +133,8 @@ export class Assembler implements OnInit {
                     console.timeEnd(map.algorithm);
                     map.visualizePathCosts();
                     map.calculateStatistic();
+                } else {
+                    console.log("HALLLOOO");
                 }
                 if (map.algorithmInstance.isInitialized === undefined || map.algorithmInstance.isInitialized === false) {
                     console.log("Berechne neuen Pfad! - bisher kein Algorithmus initialisiert..");
@@ -253,7 +255,6 @@ export class Assembler implements OnInit {
             Version mit Roboter als Moveable
         */
 
-        
         this.robotIsMoving = true;
         this.map.resetPath();
         let pathFinder = this.getAlgorithmInstance();
@@ -279,13 +280,13 @@ export class Assembler implements OnInit {
 
             let nextCell = pathFinder.calculatePath(start, goal) as Cell;
 
-            start = nextCell;
-            this.map.drawViewRadius(start);
+            this.map.drawViewRadius(nextCell);
 
-            if (start.isGoal) {
+            if (nextCell.isGoal) {
                 clearTimeout(interval);
                 //this.map.removeChangeListener(onMapUpdate);
                 this.robotIsMoving = false;
+                this.start.moveTo(nextCell.position, true);
 
             } else {
                 this.visualizePathCosts();
@@ -303,6 +304,9 @@ export class Assembler implements OnInit {
                 
             }
             this.calculateStatistic();
+
+            //Startposition weitersetzen für nächste Itteration -- wenn das nicht passiert, wird der Suchalgorithmus immer wieder von der selben Position aus gestartet
+            start = nextCell;
 
         }, this.robotStepInterval);
     }
@@ -356,7 +360,6 @@ export class Assembler implements OnInit {
         if (this.editStartCell) {
             this.start.moveTo(cell.position);
             this.editStartCell = false;
-            console.log("Startzelle platziert!");
         } else if (this.editGoalCell) {
             this.goal.moveTo(cell.position);
             this.editGoalCell = false;
@@ -378,10 +381,6 @@ export class Assembler implements OnInit {
                     break;
                 case CellType.Start:
                     this.editStartCell = true;
-                    //console.log(cell);
-                    console.log("Startzelle geklickt");
-                    //cell = new Cell(cell.position.y,cell.position.x,CellType.Free);
-                    //console.log(cell);
                     break;
                 case CellType.Goal:
                     this.editGoalCell = true;

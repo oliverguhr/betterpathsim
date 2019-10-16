@@ -3,7 +3,7 @@
  * Paper "Reusing Previously Found A* Paths for Fast Goal-Directed Navigation in Dynamic Terrain" HernandezAB15
 */
 
-import { Cell, Map, CellType, Position, Moveable } from "../grid/index";
+import { Cell, Map, CellType, Position, Moveable, CellDisplayType } from "../grid/index";
 import { PathAlgorithm } from "./PathAlgorithm";
 import * as PriorityQueue from "js-priority-queue";
 import { Distance } from "./Distance";
@@ -111,7 +111,7 @@ export class GAAStar extends PathAlgorithm {
         while (s !== this.start) {
             if (!(s.isGoal || s.isStart)) {
                 s.type = CellType.Current;
-                s.color = undefined;
+                s.addDisplayType(CellDisplayType.Path)
             }
             let parent = this.parent.get(s);
             this.next.set(parent, s);
