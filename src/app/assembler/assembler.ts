@@ -38,7 +38,9 @@ export class Assembler implements OnInit {
     //      Variablen der Map
     //######################################
 
-    map: Map;
+    map: Map;               //AnzeigeMap (mit allen Infos)
+    robotMap: Map;          //Filtermap für Sichtradius des Roboters (nur mit Infos im Sichtradius)
+
     stat: any;
     start: any;
     goal: any;
@@ -66,8 +68,6 @@ export class Assembler implements OnInit {
 
     ngOnInit() {
         
-        console.log(this.cols, this.rows);
-        
         let map = this;
         
         map.name = "test";
@@ -88,33 +88,20 @@ export class Assembler implements OnInit {
         this.robotViewRadius = 5;
 
         this.map = new Map(this.rows, this.cols, this.robotViewRadius);
-    
-        map.start = new Moveable(this.map, CellType.Start);
+        this.robotMap = new Map(this.rows, this.cols, this.robotViewRadius);
+
+        map.start = new Moveable(this.map, this.robotMap, CellType.Start);
         map.start.moveTo(new Position(Math.round(map.cols / 4), Math.round(map.rows / 2)));
-
-        console.log("Start: "+this.map.getStartCell());
-
-        map.goal = new Moveable(this.map, CellType.Goal);
+        map.goal = new Moveable(this.map, this.robotMap, CellType.Goal);
         map.goal.moveTo(new Position(Math.round((map.cols / 4) * 3), Math.round(map.rows / 2)));
         
         map.cellSize = 25;
         map.widthPx = map.map.cols * map.cellSize;
         map.heightPx = map.map.rows * map.cellSize;
 
-        console.log(map.widthPx, map.heightPx);
-
-        this.map.notifyOnChange(
-            (cell: Cell) => {
-
-                console.log("==================================")
-                console.log("notifyOnChange");
-                /*
-                if (map.robotIsMoving) {
-                    console.log("Robot moved - abbruch der Notify!");
-                    return;
-                }
-*/
-                
+        this.robotMap.notifyOnChange(
+            (cell: Cell) => {   
+                //Initialisieren des Algorithmus       
                 try {
                     map.algorithmInstance = map.getAlgorithmInstance();
                 } catch (e) {
@@ -122,8 +109,8 @@ export class Assembler implements OnInit {
                     return;
                 }
 
-                console.log("Rücksetzen des Pfades!");
-                map.map.resetPath();
+                //Rücksetzen des alten Pfades
+                map.robotMap.resetPath();
 
                 if (map.algorithmInstance.isInitialized) {
                     console.time(map.algorithm);
@@ -133,17 +120,13 @@ export class Assembler implements OnInit {
                     console.timeEnd(map.algorithm);
                     map.visualizePathCosts();
                     map.calculateStatistic();
-                } else {
-                    console.log("HALLLOOO");
-                }
+                } 
                 if (map.algorithmInstance.isInitialized === undefined || map.algorithmInstance.isInitialized === false) {
-                    console.log("Berechne neuen Pfad! - bisher kein Algorithmus initialisiert..");
-
                     if(this.map.getStartCell() !== undefined && this.map.getGoalCell() !== undefined) {
                         map.calculatePath();
                     }     
                     else {
-                        console.log("Keine Wegfindung möglich, da neuer Startpunkt/Zielpunkt noch nicht auf Map gesetzt.");
+                        //Abbruch falls erstes Update bei Umplatzierung des Start- oder Zielpunktes
                     }      
                 }
             }
@@ -166,23 +149,23 @@ export class Assembler implements OnInit {
         let algorithm: any;
         switch (this.algorithm) {
             case "Dijkstra":
-                algorithm = new Dijkstra(this.map);
+                algorithm = new Dijkstra(this.robotMap);
                 break;
             case "LpaStar":
                 if (this.algorithmInstance instanceof LpaStar) {
                     algorithm = this.algorithmInstance;
                 } else {
-                    algorithm = new LpaStar(this.map);
+                    algorithm = new LpaStar(this.robotMap);
                 }
                 break;
             case "AStar":
-                algorithm = new AStar(this.map);
+                algorithm = new AStar(this.robotMap);
                 break;
             case "GAAStar":
-                algorithm = new GAAStar(this.map);
+                algorithm = new GAAStar(this.robotMap);
                 break;
             default:
-                algorithm = new MPGAAStar(this.map);
+                algorithm = new MPGAAStar(this.robotMap, this.map);
                 break;
         }
     
@@ -218,7 +201,6 @@ export class Assembler implements OnInit {
         if (pathFinder.isInitialized === undefined || pathFinder.isInitialized === false) {
            // console.time(this.algorithm);
             // console.profile("Dijkstra");
-            console.log("Suchalgorithmus wird gestartet..");
             pathFinder.run();
             // console.profileEnd("Dijkstra");
            // console.timeEnd(this.algorithm);
@@ -249,11 +231,14 @@ export class Assembler implements OnInit {
         }, 10);
     };
 
-    startRobot = () => {
+    updateMapsInRadius = () => {
+        let mapCells = this.map.cells;
+        mapCells.forEach( (eachCell) => {
+            this.synchronizeRobotMap(eachCell);
+        });
+    }
 
-        /*
-            Version mit Roboter als Moveable
-        */
+    startRobot = () => {
 
         this.robotIsMoving = true;
         this.map.resetPath();
@@ -281,6 +266,8 @@ export class Assembler implements OnInit {
             let nextCell = pathFinder.calculatePath(start, goal) as Cell;
 
             this.map.drawViewRadius(nextCell);
+
+            this.updateMapsInRadius();
 
             if (nextCell.isGoal) {
                 clearTimeout(interval);
@@ -356,6 +343,17 @@ export class Assembler implements OnInit {
         this.robots = undefined;
     };
 
+    synchronizeRobotMap = (cell: Cell) => {
+        let position = cell.getPosition;
+
+        let distance = Distance.euclid(cell,this.start) - 1
+        if(distance <= this.map.robotRadius) {
+            let robotMapCell = this.robotMap.getCell(position.x,position.y);
+            robotMapCell.type = cell.type;
+            this.robotMap.updateCell(robotMapCell);
+        }
+    };
+
     clickOnCell = (cell: Cell) => {
         if (this.editStartCell) {
             this.start.moveTo(cell.position);
@@ -370,6 +368,9 @@ export class Assembler implements OnInit {
                     // debugger;
                     cell.removeCurrentDisplayType()
                     //cell.addDisplayType(CellDisplayType.Free)
+
+                    this.synchronizeRobotMap(cell, CellType.Free);
+
                     break;
                 case CellType.Current:
                 case CellType.Visited:
@@ -378,6 +379,9 @@ export class Assembler implements OnInit {
                     // debugger                          
                     cell.type = CellType.Blocked;                    
                     cell.addDisplayType(CellDisplayType.Wall)
+
+                    this.synchronizeRobotMap(cell);
+
                     break;
                 case CellType.Start:
                     this.editStartCell = true;

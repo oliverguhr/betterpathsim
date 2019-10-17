@@ -34,14 +34,13 @@ export class MPGAAStar extends PathAlgorithm {
     private parent: TypMappedDictionary<Cell, Cell>;
     /** keep track of those states which support the h-values of other states */
     private support: TypMappedDictionary<Cell, Cell>;
-    private robot: Moveable;
     
     cellX: number;
     cellY: number;
     robotX: number;
     robotY: number;
 
-    constructor(public map: Map) {
+    constructor(public map: Map, public viewMap: Map) {
         super();
 
         this.openCells = new SimplePriorityQueue<Cell, number>((a, b) => a - b, 0);
@@ -52,8 +51,6 @@ export class MPGAAStar extends PathAlgorithm {
         this.next = new TypMappedDictionary<Cell, Cell>(cell => this.map.getIndexOfCell(cell));
         this.parent = new TypMappedDictionary<Cell, Cell>(cell => this.map.getIndexOfCell(cell));
         this.support = new TypMappedDictionary<Cell, Cell>(cell => this.map.getIndexOfCell(cell));
-
-        this.robot = new Moveable(map, CellType.Current);
     }
 
     /**
@@ -108,27 +105,22 @@ export class MPGAAStar extends PathAlgorithm {
 
     public run() {
         /** This equals to a basic A* search */
-
-        console.log("--------- Wegfindung");
-
-        console.log("Rücksetzen des Pfades");
         this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index))
-
-        console.log("Neuberechnung des Pfades");
-
-        console.log("Startposition: "+this.map.getStartCell().position);
-        console.log("Zielposition: "+this.map.getGoalCell().position);
         this.calculatePath(this.map.getStartCell(), this.map.getGoalCell());
-
-        console.log("Wegfindung abgeschlossen -----------");
     }
 
-    private buildPath(s: Cell): void { 
-        console.log("Zeichne Weg!")               
+    private buildPath(s: Cell): void {               
         while (s !== this.start) {
             if (!(s.isGoal || s.isStart)) {
+
+                let position = s.getPosition;
+                let viewMapS = this.viewMap.getCell(position.x,position.y);
+
                 s.type = CellType.Current;
                 s.addDisplayType(CellDisplayType.Path)
+
+                //viewMapS.type = CellType.Current;
+                //viewMapS.addDisplayType(CellDisplayType.Path);
             }
             let parent = this.parent.get(s);
             this.next.set(parent, s);

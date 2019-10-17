@@ -32,7 +32,6 @@ export class GAAStar extends PathAlgorithm {
      */
     private next: TypMappedDictionary<Cell, Cell>;
     private parent: TypMappedDictionary<Cell, Cell>;
-    private robot: Moveable;
 
     constructor(public map: Map) {
         super();
@@ -46,7 +45,6 @@ export class GAAStar extends PathAlgorithm {
         this.next = new TypMappedDictionary<Cell, Cell>(cell => this.map.getIndexOfCell(cell));
         this.parent = new TypMappedDictionary<Cell, Cell>(cell => this.map.getIndexOfCell(cell));
 
-        this.robot = new Moveable(map, CellType.Current);
     }
  
     /**

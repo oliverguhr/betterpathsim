@@ -95,6 +95,9 @@ export class Cell {
   get isBlockable() {
     return this.isFree || this.isCurrent ||this.isVisited;
   }
+  get getPosition() {
+      return this.position;
+  }
 
   /*################################################
              Positionsausgabe der Zelle

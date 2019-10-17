@@ -7,9 +7,6 @@ export class PathCostVisualizer {
     }
 
     public paint() {
-        
-        console.log("Zeichne Heuristiken!")
-
         let visitedCells = this.map.cells.filter(cell => cell.isVisited && Number.isFinite(cell.distance));
 
         if(visitedCells.length == 0)
