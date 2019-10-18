@@ -33,7 +33,7 @@ export class GAAStar extends PathAlgorithm {
     private next: TypMappedDictionary<Cell, Cell>;
     private parent: TypMappedDictionary<Cell, Cell>;
 
-    constructor(public map: Map) {
+    constructor(public map: Map, public viewMap: Map) {
         super();
 
         this.closedCells = new SimplePriorityQueue<Cell, number>((a, b) => a - b, 0);
@@ -101,6 +101,9 @@ export class GAAStar extends PathAlgorithm {
     }
     
     public run() {
+        //Resett des bisherigen Pfades auf der Karte
+        this.viewMap.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index));
+
         /** This equals to a basic A* search */
         this.calculatePath(this.map.getStartCell(),this.map.getGoalCell());        
     }
@@ -108,8 +111,10 @@ export class GAAStar extends PathAlgorithm {
     private buildPath(s: Cell): void {
         while (s !== this.start) {
             if (!(s.isGoal || s.isStart)) {
-                s.type = CellType.Current;
-                s.addDisplayType(CellDisplayType.Path)
+                let position = s.getPosition;
+                let viewMapS = this.viewMap.getCell(position.x,position.y);
+
+                viewMapS.addDisplayType(CellDisplayType.Path);
             }
             let parent = this.parent.get(s);
             this.next.set(parent, s);

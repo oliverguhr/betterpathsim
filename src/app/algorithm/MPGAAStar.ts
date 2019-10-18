@@ -104,13 +104,10 @@ export class MPGAAStar extends PathAlgorithm {
     }
 
     public run() {
-
-        console.log("run läuft")
-
-        /** This equals to a basic A* search */
-        this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index));
+        //Resett des bisherigen Pfades auf der Karte
         this.viewMap.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index));
-
+        
+        /** This equals to a basic A* search */
         this.calculatePath(this.map.getStartCell(), this.map.getGoalCell());
     }
 
@@ -121,14 +118,11 @@ export class MPGAAStar extends PathAlgorithm {
                 let position = s.getPosition;
                 let viewMapS = this.viewMap.getCell(position.x,position.y);
 
-                //s.type = CellType.Current;
-                //s.addDisplayType(CellDisplayType.Path)
                 viewMapS.addDisplayType(CellDisplayType.Path);
             }
             let parent = this.parent.get(s);
             this.next.set(parent, s);
-            s = parent;
-            if(s.isStart) console.log(s.position);  
+            s = parent; 
         }
     }
 
