@@ -54,7 +54,7 @@ export class Moveable {
             cell.cellType = this.cellType;
 
             if(this.cellType === CellType.Goal) {cell.addDisplayType(CellDisplayType.Goal)}
-            if(this.cellType === CellType.Start) {cell.addDisplayType(CellDisplayType.Start)}
+            if(this.cellType === CellType.Start && !moving) {cell.addDisplayType(CellDisplayType.Start)}
             if(this.cellType === CellType.Start && moving) {cell.addDisplayType(CellDisplayType.Robot)}        
 
             this.currentCell = cell;
@@ -65,7 +65,7 @@ export class Moveable {
             cell.cellType = this.cellType;
 
             if(this.cellType === CellType.Goal) {cell.addDisplayType(CellDisplayType.Goal)}
-            if(this.cellType === CellType.Start) {cell.addDisplayType(CellDisplayType.Start)}
+            if(this.cellType === CellType.Start && !moving) {cell.addDisplayType(CellDisplayType.Start)}
             if(this.cellType === CellType.Start && moving) {cell.addDisplayType(CellDisplayType.Robot)}        
 
             this.currentCell = cell;

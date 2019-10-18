@@ -3,12 +3,12 @@ import { Map, Moveable, CellType, Position } from "../grid/index";
 
 export class DynmicObstacleGenerator {
     private robots: Array<Moveable>;
-    constructor(private map: Map) {
+    constructor(private map: Map, private robotMap: Map) {
         this.robots = [];
      }
 
     public add() {
-        let robot = new Moveable(this.map, CellType.Blocked);
+        let robot = new Moveable(this.map, this.robotMap, CellType.Blocked);
         robot.moveTo(this.getRandomPosition());
         robot.currentCell.color = "#BBF";
         this.robots.push(robot);

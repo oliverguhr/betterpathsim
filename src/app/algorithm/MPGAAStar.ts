@@ -81,7 +81,7 @@ export class MPGAAStar extends PathAlgorithm {
             // heuristic update             
             cell.heuristicDistance = s.distance + s.heuristicDistance - cell.distance;
         });
-
+        console.log("Buildpath!")
         this.buildPath(s);
         return this.next.get(this.start);
     }
@@ -104,27 +104,31 @@ export class MPGAAStar extends PathAlgorithm {
     }
 
     public run() {
+
+        console.log("run läuft")
+
         /** This equals to a basic A* search */
-        this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index))
+        this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index));
+        this.viewMap.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index));
+
         this.calculatePath(this.map.getStartCell(), this.map.getGoalCell());
     }
 
-    private buildPath(s: Cell): void {               
+    private buildPath(s: Cell): void {
         while (s !== this.start) {
             if (!(s.isGoal || s.isStart)) {
 
                 let position = s.getPosition;
                 let viewMapS = this.viewMap.getCell(position.x,position.y);
 
-                s.type = CellType.Current;
-                s.addDisplayType(CellDisplayType.Path)
-
-                //viewMapS.type = CellType.Current;
-                //viewMapS.addDisplayType(CellDisplayType.Path);
+                //s.type = CellType.Current;
+                //s.addDisplayType(CellDisplayType.Path)
+                viewMapS.addDisplayType(CellDisplayType.Path);
             }
             let parent = this.parent.get(s);
             this.next.set(parent, s);
             s = parent;
+            if(s.isStart) console.log(s.position);  
         }
     }
 

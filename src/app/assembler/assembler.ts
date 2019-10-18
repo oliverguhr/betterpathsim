@@ -110,6 +110,7 @@ export class Assembler implements OnInit {
                 }
 
                 //Rücksetzen des alten Pfades
+                map.map.resetPath();
                 map.robotMap.resetPath();
 
                 if (map.algorithmInstance.isInitialized) {
@@ -233,9 +234,19 @@ export class Assembler implements OnInit {
 
     updateMapsInRadius = () => {
         let mapCells = this.map.cells;
+        let changedCells = [];
         mapCells.forEach( (eachCell) => {
-            this.synchronizeRobotMap(eachCell);
+            let position = eachCell.getPosition;
+
+            let distance = Distance.euclid(eachCell,this.start) - 1
+            if(distance <= this.map.robotRadius) {
+                let robotMapCell = this.robotMap.getCell(position.x,position.y);
+                robotMapCell.type = eachCell.type;
+
+                changedCells.push(robotMapCell);
+            }
         });
+        this.robotMap.updateCells(changedCells)
     }
 
     startRobot = () => {
@@ -263,10 +274,10 @@ export class Assembler implements OnInit {
 
         let interval = setInterval (() => {
 
+            console.log("=================== STEP =======================")
             let nextCell = pathFinder.calculatePath(start, goal) as Cell;
 
             this.map.drawViewRadius(nextCell);
-
             this.updateMapsInRadius();
 
             if (nextCell.isGoal) {
@@ -318,7 +329,7 @@ export class Assembler implements OnInit {
 
     addDynamicObstacle = () => {
         if (this.robots === undefined) {
-            this.robots = new DynmicObstacleGenerator(this.map);
+            this.robots = new DynmicObstacleGenerator(this.map, this.robotMap);
         }
         this.robots.add();
 
@@ -355,6 +366,9 @@ export class Assembler implements OnInit {
     };
 
     clickOnCell = (cell: Cell) => {
+
+        let i=0;
+
         if (this.editStartCell) {
             this.start.moveTo(cell.position);
             this.editStartCell = false;
@@ -365,11 +379,21 @@ export class Assembler implements OnInit {
             switch (cell.type) {
                 case CellType.Blocked:                
                     cell.type = CellType.Free;
-                    // debugger;
                     cell.removeCurrentDisplayType()
-                    //cell.addDisplayType(CellDisplayType.Free)
 
-                    this.synchronizeRobotMap(cell, CellType.Free);
+                    /*
+                    cell.addDisplayType(CellDisplayType.Path)
+
+                    console.log(cell.currentContent);
+                    cell.currentContent.forEach( (eachContent) => {
+                        console.log(i)
+                        console.log(eachContent);
+                        i++;
+                    })
+
+                    //cell.removeCurrentDisplayType()
+                    */
+                    this.synchronizeRobotMap(cell);
 
                     break;
                 case CellType.Current:
@@ -379,7 +403,14 @@ export class Assembler implements OnInit {
                     // debugger                          
                     cell.type = CellType.Blocked;                    
                     cell.addDisplayType(CellDisplayType.Wall)
-
+                    /*
+                    console.log(cell.currentContent);
+                    cell.currentContent.forEach( (eachContent) => {
+                        console.log(i)
+                        console.log(eachContent);
+                        i++;
+                    })
+                    */
                     this.synchronizeRobotMap(cell);
 
                     break;

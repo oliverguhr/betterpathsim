@@ -42,6 +42,19 @@ export class Map {
         this.hasChanged(cell);
     }
 
+    public updateCells(cells: Cell[]) {
+        let lastCell;
+        cells.forEach( (eachCell) => {
+            let position = eachCell.getPosition;
+            this.grid[position.y][position.x] = eachCell;
+            lastCell = eachCell;
+        });
+
+        console.log("Map-Update-Sichtradius!");
+
+        this.hasChanged(lastCell);
+    }
+
     /*##############################################
                     Getter 
     ##############################################*/
@@ -81,7 +94,9 @@ export class Map {
             
             cell.removeDisplayType(CellDisplayType.Path);
             cell.removeDisplayType(CellDisplayType.Start);
+
         })
+        //debugger;
     }
 
     public resetBlocks() {

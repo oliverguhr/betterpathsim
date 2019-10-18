@@ -36,7 +36,10 @@ export class Cell {
 
   public addDisplayType(type: CellDisplayType){    
     this.content.push(type)
-    this.content = this.content.sort(x => x.index).reverse()
+    //this.content = this.content.sort(x => x.index).reverse()
+
+    this.content = this.content.sort((a,b) => a.index < b.index ? -1 : a.index > b.index ? 1 : 0).reverse()
+
     this.color = this.getCurrentDisplayType().color
   }
 
@@ -68,6 +71,10 @@ export class Cell {
   }
   get type() {
     return this.cellType;
+  }
+
+  get currentContent() {
+      return this.content;
   }
 
   /*################################################
