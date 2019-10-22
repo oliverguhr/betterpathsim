@@ -7,11 +7,12 @@ export class PathCostVisualizer {
     }
 
     public paint() {
+        //Prüfung ob es Zellen mit Status Visited gibt UND! diese eine Distance bekommen haben
         let visitedCells = this.map.cells.filter(cell => cell.isVisited && Number.isFinite(cell.distance));
-
-        if(visitedCells.length == 0)
+        if(visitedCells.length == 0) {
             return;
-
+        }
+            
         //remove old gradient colors        
         this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(300))
 

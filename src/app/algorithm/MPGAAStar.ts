@@ -81,7 +81,6 @@ export class MPGAAStar extends PathAlgorithm {
             // heuristic update             
             cell.heuristicDistance = s.distance + s.heuristicDistance - cell.distance;
         });
-        console.log("Buildpath!")
         this.buildPath(s);
         return this.next.get(this.start);
     }
@@ -178,7 +177,11 @@ export class MPGAAStar extends PathAlgorithm {
                 let neighborsDistance = s.distance + this.distance(neighbor, s);
 
                 if (neighbor.distance > neighborsDistance) {
+                    //Distance im Backend aktualisieren
                     neighbor.distance = neighborsDistance;
+                    //Distance auf sichtbare Map übertragen
+                    this.viewMap.getCell(neighbor.position.x,neighbor.position.y).distance = neighborsDistance;
+
                     this.parent.set(neighbor, s);
                     this.updateF(neighbor);
                     if (this.openCells.has(neighbor)) {
@@ -191,7 +194,12 @@ export class MPGAAStar extends PathAlgorithm {
                     }
                 }
                 if (!(neighbor.isGoal || neighbor.isStart)) {
+                    //Visited-Status in Backend setzen
                     neighbor.cellType = CellType.Visited;
+                    //Visited-Status auf sichtbare Map übertragen
+                    if(!this.viewMap.getCell(neighbor.position.x,neighbor.position.y).isBlocked)
+                    this.viewMap.getCell(neighbor.position.x,neighbor.position.y).cellType = CellType.Visited;
+
                 }
             }
         }

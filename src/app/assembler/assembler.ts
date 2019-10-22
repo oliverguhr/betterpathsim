@@ -188,6 +188,7 @@ export class Assembler implements OnInit {
     visualizePathCosts = () => {
         if (this.isVisualizePathEnabled === true) {
             let visual = new PathCostVisualizer(this.map);
+            //let visual = new PathCostVisualizer(this.robotMap);
             visual.paint();
         }
     };
