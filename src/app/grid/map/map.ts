@@ -101,24 +101,30 @@ export class Map {
 
     public resetBlocks() {
         this.cells.filter(cell => cell.isBlocked).forEach(cell => {
-        cell.type = CellType.Free;
-        cell.color = undefined;
+            cell.type = CellType.Free;
+            //cell.color = undefined;
+            cell.removeDisplayType(CellDisplayType.Wall);
+            cell.removeDisplayType(CellDisplayType.UnknownWall);
         })
     }
 
-    
     public drawViewRadius(start: Cell) {
         this.viewRadiusX = (start.position.x*25) + 25/2;
         this.viewRadiusY = (start.position.y*25) + 25/2;
         this.viewRadiusR = (this.robotRadius*25) + 25/2;
     }
 
-
     public checkCellInView (cell: Cell, start:Cell) {
         return  cell.position.x >= start.position.x - this.robotRadius && 
                 cell.position.x <= start.position.x + this.robotRadius && 
                 cell.position.y >= start.position.y - this.robotRadius && 
                 cell.position.y <= start.position.y + this.robotRadius;
+    }
+
+    public resetKnownWalls() {
+        this.cells.filter(cell => cell.isBlocked).forEach(cell => {
+            cell.removeDisplayType(CellDisplayType.Wall); 
+        })
     }
 
     /*##############################################

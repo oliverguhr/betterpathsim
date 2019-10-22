@@ -95,6 +95,8 @@ export class Assembler implements OnInit {
         map.goal = new Moveable(this.map, this.robotMap, CellType.Goal);
         map.goal.moveTo(new Position(Math.round((map.cols / 4) * 3), Math.round(map.rows / 2)));
         
+        this.map.drawViewRadius(this.start);
+
         map.cellSize = 25;
         map.widthPx = map.map.cols * map.cellSize;
         map.heightPx = map.map.rows * map.cellSize;
@@ -369,6 +371,9 @@ export class Assembler implements OnInit {
 
         if (this.editStartCell) {
             this.start.moveTo(cell.position);
+            
+            this.showViewRadius();
+
             this.editStartCell = false;
         } else if (this.editGoalCell) {
             this.goal.moveTo(cell.position);
@@ -377,38 +382,18 @@ export class Assembler implements OnInit {
             switch (cell.type) {
                 case CellType.Blocked:                
                     cell.type = CellType.Free;
-                    cell.removeCurrentDisplayType()
 
-                    /*
-                    cell.addDisplayType(CellDisplayType.Path)
-
-                    console.log(cell.currentContent);
-                    cell.currentContent.forEach( (eachContent) => {
-                        console.log(i)
-                        console.log(eachContent);
-                        i++;
-                    })
-
-                    //cell.removeCurrentDisplayType()
-                    */
+                    cell.removeDisplayType(CellDisplayType.Wall);
+                    cell.removeDisplayType(CellDisplayType.UnknownWall);
                     this.synchronizeRobotMap(cell);
 
                     break;
                 case CellType.Current:
                 case CellType.Visited:
                 case CellType.Free:   
-                    //todo: add new method to cell   
-                    // debugger                          
+                        
                     cell.type = CellType.Blocked;                    
                     cell.addDisplayType(CellDisplayType.UnknownWall)
-                    /*
-                    console.log(cell.currentContent);
-                    cell.currentContent.forEach( (eachContent) => {
-                        console.log(i)
-                        console.log(eachContent);
-                        i++;
-                    })
-                    */
                     this.synchronizeRobotMap(cell);
 
                     break;
@@ -442,6 +427,16 @@ export class Assembler implements OnInit {
 
     showViewRadius = () => {
         this.map.robotRadius = this.robotViewRadius;
+        this.map.drawViewRadius(this.start);
+
+        if(!this.robotIsMoving) {
+            //Setzt alle Blöcke auf Map auf Unbekannt
+            this.map.resetKnownWalls();
+            //Setzt Roboter Map zurück
+            this.robotMap.resetBlocks();
+            //Synchronisiert die Maps neu
+            this.updateMapsInRadius();
+        }
     }
 
 }
