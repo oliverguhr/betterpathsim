@@ -151,8 +151,6 @@ export class MPGAAStar extends PathAlgorithm {
         while (!this.openCells.isEmpty) {
             let s = this.openCells.pop();
 
-           // debugger;
-
             if (this.GoalCondition(s)) {
                 return s;
             }

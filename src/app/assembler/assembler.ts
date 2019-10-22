@@ -243,7 +243,9 @@ export class Assembler implements OnInit {
             if(distance <= this.map.robotRadius) {
                 let robotMapCell = this.robotMap.getCell(position.x,position.y);
                 robotMapCell.type = eachCell.type;
-
+                //Anpassen des Display Types der blockierten Zellen: unknwonWall -> Wall
+                if(eachCell.type == CellType.Blocked) eachCell.addDisplayType(CellDisplayType.Wall);
+                
                 changedCells.push(robotMapCell);
             }
         });
@@ -255,17 +257,6 @@ export class Assembler implements OnInit {
         this.robotIsMoving = true;
         this.map.resetPath();
         let pathFinder = this.getAlgorithmInstance();
-
-        /*
-        let onMapUpdate = (cell: Cell) => {             
-            //since we are using the old robot position, we need to subtract 1 from the distance
-            let distance = Distance.euclid(cell,this.algorithmInstance.start) - 1
-            if(distance <= this.map.robotRadius) {
-                pathFinder.observe(cell) 
-            }
-        };
-        this.map.notifyOnChange(onMapUpdate);
-        */
 
         let start = this.map.getStartCell() as Cell;
         let goal = this.map.getGoalCell();
@@ -281,13 +272,16 @@ export class Assembler implements OnInit {
             this.map.drawViewRadius(nextCell);
             this.updateMapsInRadius();
 
-            if (nextCell.isGoal) {
+            if (nextCell.isGoal) {              //Code für letzten Schritt
                 clearTimeout(interval);
-                //this.map.removeChangeListener(onMapUpdate);
                 this.robotIsMoving = false;
                 this.start.moveTo(nextCell.position, true);
+        
+               //this.map.cells.filter((x:Cell) => x.isVisited).forEach((x:Cell) =>{ x.type = CellType.Free; x.color = undefined});
 
-            } else {
+                console.log("jo")
+            } else {                            //Code für Zwischenschritt
+                console.log("hey")
                 this.visualizePathCosts();
                 if(lastPosition !== undefined)
                 {
@@ -362,6 +356,9 @@ export class Assembler implements OnInit {
         if(distance <= this.map.robotRadius) {
             let robotMapCell = this.robotMap.getCell(position.x,position.y);
             robotMapCell.type = cell.type;
+            //Anpassen des Display Types der blockierten Zellen: unknwonWall -> Wall
+            if(cell.type == CellType.Blocked) cell.addDisplayType(CellDisplayType.Wall);
+            
             this.robotMap.updateCell(robotMapCell);
         }
     };
@@ -403,7 +400,7 @@ export class Assembler implements OnInit {
                     //todo: add new method to cell   
                     // debugger                          
                     cell.type = CellType.Blocked;                    
-                    cell.addDisplayType(CellDisplayType.Wall)
+                    cell.addDisplayType(CellDisplayType.UnknownWall)
                     /*
                     console.log(cell.currentContent);
                     cell.currentContent.forEach( (eachContent) => {

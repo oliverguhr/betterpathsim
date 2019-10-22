@@ -33,7 +33,8 @@ export class CellDisplayType {
     public static Robot = new CellDisplayType(1000,"#ee00f2");
     public static Goal = new CellDisplayType(950,"#F88")
     public static Start = new CellDisplayType(950,"#8F8")
-    public static Wall = new CellDisplayType(900,"#666")
+    public static Wall = new CellDisplayType(900,"#424242")
+    public static UnknownWall = new CellDisplayType(800,"#848484");
     public static Path = new CellDisplayType(400,"#44F")
     public static MoveingObstacle = new CellDisplayType(800,"#BBF")
     public static Free = new CellDisplayType(0,"#FFF")
