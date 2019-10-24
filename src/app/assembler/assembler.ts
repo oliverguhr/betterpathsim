@@ -32,6 +32,8 @@ export class Assembler implements OnInit {
     robotViewRadius: number;
     robotIntervall: any;
 
+    static robotViewRadiusOff = 100;
+
     editStartCell: boolean;
     editGoalCell: boolean;
 
@@ -154,9 +156,11 @@ export class Assembler implements OnInit {
         let algorithm: any;
         switch (this.algorithm) {
             case "Dijkstra":
+                this.robotViewRadius = Assembler.robotViewRadiusOff;
                 algorithm = new Dijkstra(this.map);
                 break;
             case "LpaStar":
+                this.robotViewRadius = Assembler.robotViewRadiusOff;
                 if (this.algorithmInstance instanceof LpaStar) {
                     algorithm = this.algorithmInstance;
                 } else {
@@ -164,16 +168,23 @@ export class Assembler implements OnInit {
                 }
                 break;
             case "AStar":
+                this.robotViewRadius = Assembler.robotViewRadiusOff;
                 algorithm = new AStar(this.map);
                 break;
             case "GAAStar":
+                this.robotViewRadius = this.robotViewRadiusSetting;
                 algorithm = new GAAStar(this.robotMap, this.map);
                 break;
             default:
+                this.robotViewRadius = this.robotViewRadiusSetting;
                 algorithm = new MPGAAStar(this.robotMap, this.map);
                 break;
         }
-    
+        
+        //Neuzeichnen des Radius nach Wahl eines Algorithmus -- zur Deaktivierung, falls Algorithmus ohne Radius
+        this.map.robotRadius = this.robotViewRadius;
+        this.map.drawViewRadius(this.start);
+
         switch (this.distance) {
             case "manhattan":
                 algorithm.distance = Distance.manhattan;
@@ -428,10 +439,11 @@ export class Assembler implements OnInit {
     };
 
     showViewRadius = () => {
+
         //Kontrolle des eingegeben Sichtradius -> 1 = Sichtradius aus
-        //Minimum Sichtradius = 2
+        //Minimum Sichtradius = 2, weil diagonale bewegung sonst "blind" stattfinden würde (ohne Synchronisation der Maps) und Roboter so durch Wände gehen könnte
         if(this.robotViewRadiusSetting == 1) {
-            this.robotViewRadius = 100;
+            this.robotViewRadius = Assembler.robotViewRadiusOff;
         } else if(this.robotViewRadiusSetting < 1){
             this.robotViewRadiusSetting = 1;
             this.robotViewRadius = this.robotViewRadiusSetting;
@@ -439,6 +451,7 @@ export class Assembler implements OnInit {
             this.robotViewRadius = this.robotViewRadiusSetting; 
         }
 
+        //Zeichnen des Sichtradius
         this.map.robotRadius = this.robotViewRadius;
         this.map.drawViewRadius(this.start);
 

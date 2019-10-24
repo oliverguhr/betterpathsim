@@ -5,6 +5,7 @@ import {Cell} from '../cell/cell';
 import {CellType} from '../cell-type/cell-type';
 import {Position} from '../position/position';
 import { CellDisplayType } from '..';
+import { Assembler } from 'src/app/assembler/assembler';
 
 @Component({
   selector: 'map'
@@ -109,6 +110,17 @@ export class Map {
     }
 
     public drawViewRadius(start: Cell) {
+        //Resetten des Alten Sichtradius
+        this.viewRadiusX = 0;
+        this.viewRadiusY = 0;
+        this.viewRadiusR = 0;
+
+        //Abbruch wenn ViewRadius ausgeschalten
+        if(this.robotRadius == Assembler.robotViewRadiusOff) {
+            return;
+        }
+
+        //Zeichnen des neuen Sichtradius
         this.viewRadiusX = (start.position.x*25) + 25/2;
         this.viewRadiusY = (start.position.y*25) + 25/2;
         this.viewRadiusR = (this.robotRadius*25) + 25/2;
