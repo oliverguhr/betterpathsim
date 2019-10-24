@@ -54,8 +54,8 @@
                                 </select>
                                 </td>
                                 <td>
-                                        <input type="number" name="viewradius" class="inputWithLabel" value="" [(ngModel)]="this.robotViewRadius" (ngModelChange)="this.showViewRadius()"/>
-                                        <label> View Radius </label>
+                                        <input type="number" name="viewradius" min="1" class="inputWithLabel" value="" [(ngModel)]="this.robotViewRadiusSetting" (ngModelChange)="this.showViewRadius()"/>
+                                        <label> View Radius <br> ( 1 = off )</label>
                                 </td>
                             </tr>
                         </table>

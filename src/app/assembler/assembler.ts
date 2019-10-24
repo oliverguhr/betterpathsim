@@ -28,6 +28,7 @@ export class Assembler implements OnInit {
     isVisualizePathEnabled: boolean;
 
     robotStepInterval: number;
+    robotViewRadiusSetting: number;
     robotViewRadius: number;
     robotIntervall: any;
 
@@ -86,6 +87,7 @@ export class Assembler implements OnInit {
         //###########################################################
 
         this.robotViewRadius = 5;
+        this.robotViewRadiusSetting = this.robotViewRadius;
 
         this.map = new Map(this.rows, this.cols, this.robotViewRadius);
         this.robotMap = new Map(this.rows, this.cols, this.robotViewRadius);
@@ -426,6 +428,17 @@ export class Assembler implements OnInit {
     };
 
     showViewRadius = () => {
+        //Kontrolle des eingegeben Sichtradius -> 1 = Sichtradius aus
+        //Minimum Sichtradius = 2
+        if(this.robotViewRadiusSetting == 1) {
+            this.robotViewRadius = 100;
+        } else if(this.robotViewRadiusSetting < 1){
+            this.robotViewRadiusSetting = 1;
+            this.robotViewRadius = this.robotViewRadiusSetting;
+        } else {
+            this.robotViewRadius = this.robotViewRadiusSetting; 
+        }
+
         this.map.robotRadius = this.robotViewRadius;
         this.map.drawViewRadius(this.start);
 
