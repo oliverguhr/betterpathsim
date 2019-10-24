@@ -158,7 +158,11 @@ export class GAAStar extends PathAlgorithm {
                 this.initializeState(neighbor);
                 let neighborsDistance = s.distance + this.distance(neighbor, s);
                 if (neighbor.distance > neighborsDistance) {
+                    //Distance im Backend aktualisieren
                     neighbor.distance = neighborsDistance;
+                    //Distance auf sichtbare Map übertragen
+                    this.viewMap.getCell(neighbor.position.x,neighbor.position.y).distance = neighborsDistance;
+
                     this.parent.set(neighbor, s);
                     this.updateF(neighbor);
                     if (this.openCells.has(neighbor)) {
@@ -169,7 +173,11 @@ export class GAAStar extends PathAlgorithm {
                     }
                 }
                 if (!(neighbor.isGoal || neighbor.isStart)) {
+                    //Visited-Status in Backend setzen
                     neighbor.cellType = CellType.Visited;
+                    //Visited-Status auf sichtbare Map übertragen
+                    if(!this.viewMap.getCell(neighbor.position.x,neighbor.position.y).isBlocked)
+                    this.viewMap.getCell(neighbor.position.x,neighbor.position.y).cellType = CellType.Visited;
                 }
             }
         }

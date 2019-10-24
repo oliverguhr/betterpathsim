@@ -152,17 +152,17 @@ export class Assembler implements OnInit {
         let algorithm: any;
         switch (this.algorithm) {
             case "Dijkstra":
-                algorithm = new Dijkstra(this.robotMap);
+                algorithm = new Dijkstra(this.map);
                 break;
             case "LpaStar":
                 if (this.algorithmInstance instanceof LpaStar) {
                     algorithm = this.algorithmInstance;
                 } else {
-                    algorithm = new LpaStar(this.robotMap);
+                    algorithm = new LpaStar(this.map);
                 }
                 break;
             case "AStar":
-                algorithm = new AStar(this.robotMap);
+                algorithm = new AStar(this.map);
                 break;
             case "GAAStar":
                 algorithm = new GAAStar(this.robotMap, this.map);
@@ -438,7 +438,6 @@ export class Assembler implements OnInit {
             this.updateMapsInRadius();
         }
     }
-
 }
 
 
