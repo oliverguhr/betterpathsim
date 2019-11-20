@@ -320,10 +320,18 @@ export class Assembler implements OnInit {
     }
 
     addRandomObstacles = () => {
+        //Rücksetzen des berechneten Pfades
         this.map.resetPath();
         this.algorithmInstance = undefined;
+
+        //Generieren von Hindernisen
         let generator = new ObstacleGenerator(this.map);
         generator.addRandomObstacles((this.map.cols * this.map.rows) * 0.1);
+
+        //Update für Sichtradius
+        this.updateMapsInRadius();
+        
+        //Neuberechnen des Pfades
         this.algorithmInstance = this.getAlgorithmInstance();
         this.calculatePath();
     };

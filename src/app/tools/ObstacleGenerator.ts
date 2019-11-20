@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { Map,  CellType} from "../grid/index";
+import { Map,  CellType, CellDisplayType} from "../grid/index";
 
 export class ObstacleGenerator {
     constructor(private map: Map) { }
@@ -23,6 +23,8 @@ export class ObstacleGenerator {
 
             if (this.map.grid[row][col].isBlockable) {
                 this.map.grid[row][col].type = CellType.Blocked;
+                this.map.grid[row][col].addDisplayType(CellDisplayType.UnknownWall)
+
                 // this.map.hasChanged(this.map.grid[row][col]);
             } else {
                 i--;
