@@ -10,7 +10,6 @@ export class DynmicObstacleGenerator {
     public add() {
         let robot = new Moveable(this.map, this.robotMap, CellType.Blocked);
         robot.moveTo(this.getRandomPosition());
-        robot.currentCell.color = "#BBF";
         this.robots.push(robot);
     }
 
@@ -22,9 +21,7 @@ export class DynmicObstacleGenerator {
                 y = robot.position.y + _.random(-1, 1);
                 x = robot.position.x + _.random(-1, 1);
             } while (!this.isPositionFree(x, y));
-            robot.currentCell.color = undefined;
             robot.moveTo(new Position(x, y));
-            robot.currentCell.color = "#BBF";
         }
     }
 
