@@ -8,7 +8,7 @@ export class DynmicObstacleGenerator {
      }
 
     public add() {
-        let robot = new Moveable(this.map, this.robotMap, CellType.Blocked);
+        let robot = new Moveable(this.map, this.robotMap, CellType.Blocked, false);
         robot.moveTo(this.getRandomPosition());
         this.robots.push(robot);
     }

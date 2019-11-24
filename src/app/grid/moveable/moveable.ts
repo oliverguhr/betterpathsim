@@ -14,7 +14,9 @@ export class Moveable {
     public position: Position;
     public currentCell: Cell;
 
-    constructor(public map: Map, public robotMap: Map, public cellType: CellType) {}
+    //secondMap steuert ob, die Map-Updates des Moveables mit an die Robot-Map weitergegeben werde
+    constructor(public map: Map, public robotMap: Map, public cellType: CellType, public secondMap: boolean = true) {}
+
 
     get getPosition() {
         return this.position;
@@ -34,15 +36,17 @@ export class Moveable {
                     return cell;
                 }
             ); 
-
+            
             //Update der FilterMap für RoboterSichtradius
-            this.robotMap.updateCellOnPosition(this.position, 
-                (cell: Cell) => {
-                    cell.cellType = CellType.Free;
-                    cell.removeCurrentDisplayType();
-                    return cell;
-                }
-            ); 
+            if(this.secondMap) {
+                this.robotMap.updateCellOnPosition(this.position, 
+                    (cell: Cell) => {
+                        cell.cellType = CellType.Free;
+                        cell.removeCurrentDisplayType();
+                        return cell;
+                    }
+                );
+            } 
         }
 
         //Verschieben des Moveable
@@ -61,17 +65,21 @@ export class Moveable {
             this.currentCell = cell;
             return cell;
         });
+
         //Update der FilterMap für RoboterSichtradius
-        this.robotMap.updateCellOnPosition(position, (cell: Cell) => {
-            cell.cellType = this.cellType;
+        if(this.secondMap){
+            this.robotMap.updateCellOnPosition(position, (cell: Cell) => {
+                cell.cellType = this.cellType;
 
-            if(this.cellType === CellType.Goal) {cell.addDisplayType(CellDisplayType.Goal)}
-            if(this.cellType === CellType.Start && !moving) {cell.addDisplayType(CellDisplayType.Start)}
-            if(this.cellType === CellType.Start && moving) {cell.addDisplayType(CellDisplayType.Robot)}
-            if(this.cellType === CellType.Blocked) {cell.addDisplayType(CellDisplayType.UnknownWall)}           
+                if(this.cellType === CellType.Goal) {cell.addDisplayType(CellDisplayType.Goal)}
+                if(this.cellType === CellType.Start && !moving) {cell.addDisplayType(CellDisplayType.Start)}
+                if(this.cellType === CellType.Start && moving) {cell.addDisplayType(CellDisplayType.Robot)}
+                if(this.cellType === CellType.Blocked) {cell.addDisplayType(CellDisplayType.UnknownWall)}           
 
-            this.currentCell = cell;
-            return cell;
-        });
+                this.currentCell = cell;
+                return cell;
+            });
+        }
     }
+
 }
