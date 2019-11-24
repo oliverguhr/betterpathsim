@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { Map, CellType, Cell, Position } from "../grid/index";
+import { Map, CellType, Cell, Position, CellDisplayType } from "../grid/index";
 
 export class MazeGenerator {
     constructor(private map: Map) { }
@@ -39,29 +39,52 @@ export class MazeGenerator {
         let lastDoor = 0;
 
         let cell: Cell;
+
+        //Horizontale Wände
         for (let i = 0; i < diffX; i++) {
             cell = this.map.grid[positionStart.y][positionStart.x + i];
             if (cell.isBlockable) {
+
                 cell.type = CellType.Blocked;
+                cell.addDisplayType(CellDisplayType.UnknownWall);
+
             } else if (cell.isBlocked) {
                 // add a door
-                this.map.grid[positionStart.y][positionStart.x + _.random(lastDoor, i - 1)].type = CellType.Free;
+                
+                let distance = _.random(lastDoor, i - 1);
+
+                this.map.grid[positionStart.y][positionStart.x + distance].type = CellType.Free;
+                this.map.grid[positionStart.y][positionStart.x + distance].removeDisplayType(CellDisplayType.UnknownWall);
+                this.map.grid[positionStart.y][positionStart.x + distance].removeDisplayType(CellDisplayType.Wall);
+                
                 lastDoor = i;
                 // throw a coin if we go ahead or stop here
                 if (_.random(0, 1) === 1) {
                     break;
                 }
             }
+
         }
         lastDoor = 0;
+
+        //Vertikale Wände
         for (let i = 0; i < diffY; i++) {
             cell = this.map.grid[positionStart.y + i][positionEnd.x];
             if (cell.isBlockable) {
+
                 cell.type = CellType.Blocked;
+                cell.addDisplayType(CellDisplayType.UnknownWall);
+            
             } else if (cell.isBlocked) {
                 // add a door
                 // if(diffY!==0)
-                this.map.grid[positionStart.y + _.random(lastDoor, i - 1)][positionEnd.x].type = CellType.Free;
+                
+                let distance = _.random(lastDoor, i - 1);
+
+                this.map.grid[positionStart.y + distance][positionEnd.x].type = CellType.Free;
+                this.map.grid[positionStart.y + distance][positionEnd.x].removeDisplayType(CellDisplayType.UnknownWall);
+                this.map.grid[positionStart.y + distance][positionEnd.x].removeDisplayType(CellDisplayType.Wall);
+
                 lastDoor = i;
                 // throw a coin if we go ahead or stop here
                 if (_.random(0, 1) === 1) {

@@ -23,7 +23,7 @@ export class ObstacleGenerator {
 
             if (this.map.grid[row][col].isBlockable) {
                 this.map.grid[row][col].type = CellType.Blocked;
-                this.map.grid[row][col].addDisplayType(CellDisplayType.UnknownWall)
+                this.map.grid[row][col].addDisplayType(CellDisplayType.UnknownWall);
 
                 // this.map.hasChanged(this.map.grid[row][col]);
             } else {

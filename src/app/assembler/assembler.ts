@@ -337,10 +337,17 @@ export class Assembler implements OnInit {
     };
 
     addWalls = () => {
+        //Rücksetzen des berechneten Pfades
         this.map.resetPath();
         this.algorithmInstance = undefined;
+
         let generator = new MazeGenerator(this.map);
         generator.createMaze();
+
+        //Update für Sichtradius
+        this.updateMapsInRadius();
+
+        //Neuberechnen des Pfades
         this.algorithmInstance = this.getAlgorithmInstance();
         this.calculatePath();
     };
@@ -382,6 +389,12 @@ export class Assembler implements OnInit {
             //Anpassen des Display Types der blockierten Zellen: unknwonWall -> Wall
             if(cell.type == CellType.Blocked) cell.addDisplayType(CellDisplayType.Wall);
             
+            //Entfernen des DisplayTypes wenn Zelle Frei -> muss später angepasst werden auf Typen für Zellen, die Roboter dort gesehen hat aber die nicht mehr da sind
+            else if(cell.type == CellType.Free) {
+                cell.removeDisplayType(CellDisplayType.Wall);
+                cell.removeDisplayType(CellDisplayType.UnknownWall);
+            }
+
             this.robotMap.updateCell(robotMapCell);
         }
     };
