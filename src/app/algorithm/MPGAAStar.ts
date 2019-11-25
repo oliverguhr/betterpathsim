@@ -59,7 +59,19 @@ export class MPGAAStar extends PathAlgorithm {
      * 
      * Returns the next cell on the path.
      */
-    public calculatePath(start: Cell, goal: Cell) {
+
+
+
+     /*     PseudeCode für Funktion, die nächste Zelle des Pfades zurückgibt
+            
+            Ist Weg berechnet?
+                Ja
+                        - Gib nächste Zelle des Weges zurück
+
+                Nein
+                        - calculatePath();
+     */
+    public calculatePath(start: Cell, goal: Cell) {                                 //Steuerungsfunktion für jede Iteration des Roboters
         this.init();
 
         this.start = start;
@@ -104,28 +116,38 @@ export class MPGAAStar extends PathAlgorithm {
 
     public run() {
         //Resett des bisherigen Pfades auf der Karte
-        this.viewMap.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index));
+        this.viewMap.cells.forEach(cell => {
+            cell.removeDisplayTypeByIndex(CellDisplayType.Path.index);
+            cell.type = CellType.Free;
+        });
         
         /** This equals to a basic A* search */
         this.calculatePath(this.map.getStartCell(), this.map.getGoalCell());
     }
 
-    private buildPath(s: Cell): void {
+    private buildPath(s: Cell): void {                                              //Baut Pfad-Dictionary und zeichnet Pfad auf Karte
+        //Übertragen des Pfades in das next-Dictionary -- Falls Pfad bereits vorhanden: nichts tun
         while (s !== this.start) {
-            if (!(s.isGoal || s.isStart)) {
-
-                let position = s.getPosition;
-                let viewMapS = this.viewMap.getCell(position.x,position.y);
-
-                viewMapS.addDisplayType(CellDisplayType.Path);
-            }
             let parent = this.parent.get(s);
             this.next.set(parent, s);
             s = parent; 
         }
+
+        //Resett des bisherigen Pfades auf der Karte
+        this.viewMap.cells.forEach(cell => {
+            cell.removeDisplayType(CellDisplayType.Path);
+        });
+    
+        //Zeichnen des Pfades
+        while (this.next.get(s) !== undefined) {
+            s = this.next.get(s);
+            let position = s.getPosition;
+            let viewMapS = this.viewMap.getCell(position.x,position.y);
+            viewMapS.addDisplayType(CellDisplayType.Path); 
+        }
     }
 
-    private aStar(init: Cell): Cell {        
+    private aStar(init: Cell): Cell {                                               //Ermittelt ob bereits ein Pfad besteht und sucht einen falls nicht     
         // cell.distance = g(x)
         // cell.estimatedDistance = f(x)
         // h(x) = this.distance(x,this.goal)
@@ -155,15 +177,10 @@ export class MPGAAStar extends PathAlgorithm {
                 return s;
             }
 
-            /*
-            Assembler kann das Rücksetzen des Pfades nicht machen, da Assembler nie weiß, wann der A*-Algorithmus wirklich einen neuen Pfad suchen muss.
-            Das weiß nur der Funktionsaufruf hier über die Bedingung -- if (this.GoalCondition(s)) --
-
-            */
-
             //cleanup old visited cells, to show which cells are calculated by the algorithm
             if(first) {
-                this.map.cells.filter((x:Cell) => x.isVisited).forEach((x:Cell) =>{ x.type = CellType.Free; x.color = undefined});
+                //this.map.cells.filter((x:Cell) => x.isVisited).forEach((x:Cell) =>{ x.type = CellType.Free; x.removeDisplayTypeByIndex(300)});
+                this.viewMap.cells.filter((x:Cell) => x.isVisited).forEach((x:Cell) =>{ x.removeDisplayTypeByIndex(300)});
                 first = false;
             }
             this.closedCells.push(s);
@@ -209,7 +226,7 @@ export class MPGAAStar extends PathAlgorithm {
         cell.estimatedDistance = cell.distance + cell.heuristicDistance;
     }
 
-    private GoalCondition(s: Cell) {
+    private GoalCondition(s: Cell) {                                                //Prüft ob bereits ein Pfad besteht
         /* 
             When using the Euclidean distance, we sometimes do not get the correct values 
             due to the limitations of floating point precision. 
@@ -284,23 +301,26 @@ export class MPGAAStar extends PathAlgorithm {
      * Observes map changes
      * Line 33 in pseudo code
      */
-    private observe(changedCell: Cell) {
+    private observe(changedCells: Cell[]) {
         /*  Todo: Review
             Pseudo Code Line 34 to 38
 
             We remove all cells with increased edge costs from the current path.
             In our case, we remove blocked cells from the path.
         */     
-        if (changedCell.isBlocked) {
-             this.next.delete(changedCell);
-         } else {
-             /*
-                 Todo: Fix this. 
-                 ReestablishConsistency should only be called, if the cell was blocked before. 
-                 Since the map does not provide the old value yet, we can't tell if the state has changed.
-                 However, until this is fixed we invoke it every time. This should not hurt, but reduce the performance. 
-             */
-             this.reestablishConsistency(changedCell);
-         }        
+
+        changedCells.forEach(changedCell => {
+            if (changedCell.isBlocked) {
+                this.next.delete(changedCell);
+            } else {
+                /*
+                    Todo: Fix this. 
+                    ReestablishConsistency should only be called, if the cell was blocked before. 
+                    Since the map does not provide the old value yet, we can't tell if the state has changed.
+                    However, until this is fixed we invoke it every time. This should not hurt, but reduce the performance. 
+                */
+                this.reestablishConsistency(changedCell);
+            }
+        });      
     }
 }

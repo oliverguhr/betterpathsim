@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { Map, Cell, CellDisplayType } from "../grid/index";
+import { Map, Cell, CellDisplayType, CellType } from "../grid/index";
 import { createElement } from '@angular/core/src/view/element';
 
 export class PathCostVisualizer {
@@ -14,14 +14,17 @@ export class PathCostVisualizer {
         }
             
         //remove old gradient colors        
-        this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(300))
+        this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(300));
 
         let maxDistance = _.maxBy(visitedCells, cell => cell.distance).distance;
         let distanceMulti = 1 / maxDistance;
 
         visitedCells.forEach(cell => {            
             let color = this.numberToColorHsl(1 - (cell.distance * distanceMulti), 0, 1);
-            cell.addDisplayType(CellDisplayType.Gradient(color))
+            cell.addDisplayType(CellDisplayType.Gradient(color));
+
+            //ZellTyp resetten, damit beim nächsten Mal nicht neu gezeichnet wird
+            cell.type = CellType.Free;
         });
     }
 

@@ -89,6 +89,7 @@ export class Map {
     ##############################################*/
 
     public resetPath() {
+        
         this.cells.filter(cell => cell.isVisited || cell.isCurrent).forEach(cell => {
             cell.type = CellType.Free;
             cell.color = undefined;
@@ -97,8 +98,7 @@ export class Map {
             cell.removeDisplayType(CellDisplayType.Start);
 
         })
-        //debugger;
-    }
+}
 
     public resetBlocks() {
         this.cells.filter(cell => cell.isBlocked).forEach(cell => {

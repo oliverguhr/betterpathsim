@@ -106,7 +106,14 @@ export class Assembler implements OnInit {
         map.heightPx = map.map.rows * map.cellSize;
 
         this.robotMap.notifyOnChange(
-            (cell: Cell) => {   
+           
+
+            (cell: Cell) => {  
+                
+                if (map.robotIsMoving) {
+                    return;
+                }
+                
                 //Initialisieren des Algorithmus       
                 try {
                     map.algorithmInstance = map.getAlgorithmInstance();
@@ -128,6 +135,7 @@ export class Assembler implements OnInit {
                     map.visualizePathCosts();
                     map.calculateStatistic();
                 } 
+
                 if (map.algorithmInstance.isInitialized === undefined || map.algorithmInstance.isInitialized === false) {
                     if(this.map.getStartCell() !== undefined && this.map.getGoalCell() !== undefined) {
                         map.calculatePath();
@@ -203,7 +211,6 @@ export class Assembler implements OnInit {
     visualizePathCosts = () => {
         if (this.isVisualizePathEnabled === true) {
             let visual = new PathCostVisualizer(this.map);
-            //let visual = new PathCostVisualizer(this.robotMap);
             visual.paint();
         }
     };
@@ -214,11 +221,12 @@ export class Assembler implements OnInit {
     };
 
     calculatePath = () => {
+
         let pathFinder = this.getAlgorithmInstance();
         if (pathFinder.isInitialized === undefined || pathFinder.isInitialized === false) {
            // console.time(this.algorithm);
             // console.profile("Dijkstra");
-            pathFinder.run();
+             pathFinder.run();
             // console.profileEnd("Dijkstra");
            // console.timeEnd(this.algorithm);
         }
@@ -264,7 +272,8 @@ export class Assembler implements OnInit {
                 changedCells.push(robotMapCell);
             }
         });
-        this.robotMap.updateCells(changedCells)
+        this.robotMap.updateCells(changedCells);
+        this.algorithmInstance.observe(changedCells);
     }
 
     startRobot = () => {
@@ -280,26 +289,30 @@ export class Assembler implements OnInit {
         this.map.drawViewRadius(start);
 
         let interval = setInterval (() => {
-
-            console.log("=================== STEP =======================")
+            
             let nextCell = pathFinder.calculatePath(start, goal) as Cell;
 
             this.map.drawViewRadius(nextCell);
             this.updateMapsInRadius();
 
+           
+
             if (nextCell.isGoal) {              //Code für letzten Schritt
                 clearTimeout(interval);
                 this.robotIsMoving = false;
                 this.start.moveTo(nextCell.position, true);
-        
-               //this.map.cells.filter((x:Cell) => x.isVisited).forEach((x:Cell) =>{ x.type = CellType.Free; x.color = undefined});
 
-                console.log("jo")
+                //Heuristiken entfernen
+                this.map.cells.forEach((x:Cell) =>{ x.removeDisplayTypeByIndex(300)});
+
             } else {                            //Code für Zwischenschritt
-                console.log("hey")
+
+                //Heuristiken entfernen
+                this.map.cells.forEach((x:Cell) =>{ x.removeDisplayTypeByIndex(300)});
+                //Heuristiken neu zeichnen -- arbeitet nur, wenn Zellen durch AStar als "visited" markiert sind
                 this.visualizePathCosts();
-                if(lastPosition !== undefined)
-                {
+
+                if(lastPosition !== undefined) {
                     lastPosition.cellType = CellType.Free;
                     lastPosition.color = undefined;
                 }
@@ -315,6 +328,7 @@ export class Assembler implements OnInit {
 
             //Startposition weitersetzen für nächste Itteration -- wenn das nicht passiert, wird der Suchalgorithmus immer wieder von der selben Position aus gestartet
             start = nextCell;
+            
 
         }, this.robotStepInterval);
     }
