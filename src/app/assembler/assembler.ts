@@ -240,9 +240,15 @@ export class Assembler implements OnInit {
 
     cleanMap = () => {
         this.algorithmInstance = undefined;
+
+        this.clearRobots();
+        this.resettRobot();
+
         this.map.resetPath();
         this.map.resetBlocks();
-        this.clearRobots();
+        
+        this.start.moveTo(new Position(Math.round(this.cols / 4), Math.round(this.rows / 2)));
+        this.goal.moveTo(new Position(Math.round((this.cols / 4) * 3), Math.round(this.rows / 2)));
     };
     
     runStepByStep = () => {
@@ -426,7 +432,7 @@ export class Assembler implements OnInit {
 
             //robots von DynmicObstacleGenerator ist privat .. -> statischer Zugriff so nicht möglich
             this.robots.robots.forEach(
-                (robot: Cell) => this.map.getCell(robot.position.x, robot.position.y).cellType = 0
+                (robot: Cell) => this.map.getCell(robot.position.x, robot.position.y).cellType = CellType.Free
             );
         }
         this.robots = undefined;
