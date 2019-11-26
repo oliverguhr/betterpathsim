@@ -52,7 +52,11 @@ export class Assembler implements OnInit {
     widthPx: number;
     heightPx: number;
 
+    startSaving: any;
+    interval: any;
+
     robotIsMoving: any;
+    robotHasMoved = false;
 
     hoveredCell: any;
 
@@ -276,7 +280,7 @@ export class Assembler implements OnInit {
         this.algorithmInstance.observe(changedCells);
     }
 
-    startRobot = () => {
+    startRobot = (first: boolean = true) => {
 
         this.robotIsMoving = true;
         this.map.resetPath();
@@ -284,11 +288,17 @@ export class Assembler implements OnInit {
 
         let start = this.map.getStartCell() as Cell;
         let goal = this.map.getGoalCell();
+
+        if(first){
+            this.startSaving = start;
+            this.robotHasMoved = true;
+        } 
+
         let lastPosition:Cell;
 
         this.map.drawViewRadius(start);
 
-        let interval = setInterval (() => {
+        this.interval = setInterval (() => {        //Startet den Roboter
             
             let nextCell = pathFinder.calculatePath(start, goal) as Cell;
 
@@ -298,7 +308,7 @@ export class Assembler implements OnInit {
            
 
             if (nextCell.isGoal) {              //Code für letzten Schritt
-                clearTimeout(interval);
+                clearTimeout(this.interval);
                 this.robotIsMoving = false;
                 this.start.moveTo(nextCell.position, true);
 
@@ -331,6 +341,35 @@ export class Assembler implements OnInit {
             
 
         }, this.robotStepInterval);
+    }
+
+    stopRobot = () => {                             //Stoppt den Roboter
+        //Timer stoppen                         
+        this.robotIsMoving = false;
+        clearTimeout(this.interval);
+    }
+
+    resettRobot = () => {                           //Setzt den Roboter auf den Ausgang seines letzten Startes zurück
+        //Timer stoppen
+        this.robotIsMoving = false;
+        clearTimeout(this.interval);
+        
+        //Wissen zurücksetzen
+        this.robotMap.resetBlocks();
+        this.map.resettKnowledge(); 
+
+        //Roboter zurück zum Ausgangspunkt bewegen
+        this.start.moveTo(this.startSaving.position, false);
+
+        //Sichtradius synchronisieren
+        this.updateMapsInRadius();
+
+        //Start-Button wieder anezigen
+        this.robotHasMoved = false;     
+    }
+
+    restartRobot = () => {                          
+        this.startRobot(false);
     }
 
     addRandomObstacles = () => {

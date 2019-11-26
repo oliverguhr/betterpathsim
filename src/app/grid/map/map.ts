@@ -100,9 +100,17 @@ export class Map {
     public resetBlocks() {
         this.cells.filter(cell => cell.isBlocked).forEach(cell => {
             cell.type = CellType.Free;
-            //cell.color = undefined;
             cell.removeDisplayType(CellDisplayType.Wall);
             cell.removeDisplayType(CellDisplayType.UnknownWall);
+        })
+    }
+
+    public resettKnowledge() {
+        this.cells.filter(cell => cell.isBlocked).forEach(cell => {
+            cell.removeDisplayType(CellDisplayType.Wall);
+            cell.removeDisplayType(CellDisplayType.UnknownWall);
+
+            cell.addDisplayType(CellDisplayType.UnknownWall);
         })
     }
 

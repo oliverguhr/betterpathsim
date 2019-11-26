@@ -63,7 +63,10 @@
                     <input type="button" (click)="this.runStepByStep()" value="Run step by step" [hidden]="this.algorithm == 'LpaStar' || this.algorithm == 'MPGAAStar'|| this.algorithm == 'GAAStar'" />
                     
                     <div [hidden]="this.algorithm == 'LpaStar' || this.algorithm == 'Dijkstra'|| this.algorithm == 'AStar'">
-                        <input type="button" (click)="this.startRobot()" value="Start Robot" [disabled]="this.robotIsMoving" />
+                        <input type="button" (click)="this.startRobot()" value="Start Robot" [disabled]="this.robotIsMoving || this.robotHasFinished" [hidden]="this.robotIsMoving || this.robotHasMoved " />
+                        <input type="button" (click)="this.restartRobot()" value="Restart Robot" [disabled]="this.robotIsMoving || this.robotHasFinished" [hidden]="this.robotIsMoving || !this.robotHasMoved " />
+                        <input type="button" (click)="this.stopRobot()" value="Stop Robot" [disabled]="!this.robotIsMoving || this.robotHasFinished" [hidden]="!this.robotIsMoving" />
+                        <input type="button" (click)="this.resettRobot()" value="Resett Robot" />
                     </div>
                 </fieldset>
 
@@ -73,7 +76,7 @@
                     <div>Path Length: <span>{{this.stat.pathLength}}</span></div>
                 </fieldset>
                 
-                <fieldset>
+                <fieldset id="fsCell">
                     <legend>Cell</legend>
                     <table>
                       <tbody>

@@ -159,6 +159,17 @@ h1 {
     width: 10em;
 }
 
+fieldset#fsCell {
+    width: 210px;
+    height: 110px;
+    text-align: center;
+}
+
+fieldset#fsCell > table{
+    margin: 0 auto; 
+    text-align: left;
+}
+
 .controls input, 
 label, .inputdiv {
     display: block;
