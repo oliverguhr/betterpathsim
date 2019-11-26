@@ -51,8 +51,6 @@ export class Map {
             lastCell = eachCell;
         });
 
-        console.log("Map-Update-Sichtradius!");
-
         this.hasChanged(lastCell);
     }
 
@@ -89,7 +87,6 @@ export class Map {
     ##############################################*/
 
     public resetPath() {
-        
         this.cells.filter(cell => cell.isVisited || cell.isCurrent).forEach(cell => {
             cell.type = CellType.Free;
             cell.color = undefined;
@@ -97,8 +94,8 @@ export class Map {
             cell.removeDisplayType(CellDisplayType.Path);
             cell.removeDisplayType(CellDisplayType.Start);
 
-        })
-}
+        });
+    }
 
     public resetBlocks() {
         this.cells.filter(cell => cell.isBlocked).forEach(cell => {

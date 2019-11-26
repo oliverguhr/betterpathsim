@@ -137,8 +137,9 @@ export class Assembler implements OnInit {
                 } 
 
                 if (map.algorithmInstance.isInitialized === undefined || map.algorithmInstance.isInitialized === false) {
+
                     if(this.map.getStartCell() !== undefined && this.map.getGoalCell() !== undefined) {
-                        map.calculatePath();
+                        this.calculatePath();
                     }     
                     else {
                         //Abbruch falls erstes Update bei Umplatzierung des Start- oder Zielpunktes
@@ -221,7 +222,6 @@ export class Assembler implements OnInit {
     };
 
     calculatePath = () => {
-
         let pathFinder = this.getAlgorithmInstance();
         if (pathFinder.isInitialized === undefined || pathFinder.isInitialized === false) {
            // console.time(this.algorithm);
@@ -262,7 +262,7 @@ export class Assembler implements OnInit {
         mapCells.forEach( (eachCell) => {
             let position = eachCell.getPosition;
 
-            let distance = Distance.euclid(eachCell,this.start) - 1
+            let distance = Distance.euclid(eachCell,this.start) - 1;
             if(distance <= this.map.robotRadius) {
                 let robotMapCell = this.robotMap.getCell(position.x,position.y);
                 robotMapCell.type = eachCell.type;

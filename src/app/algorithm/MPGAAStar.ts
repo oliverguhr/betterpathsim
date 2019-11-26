@@ -116,7 +116,7 @@ export class MPGAAStar extends PathAlgorithm {
 
     public run() {
         //Resett des bisherigen Pfades auf der Karte
-        this.viewMap.cells.forEach(cell => {
+        this.viewMap.cells.filter(cell => cell.isVisited || cell.isCurrent).forEach(cell => {
             cell.removeDisplayTypeByIndex(CellDisplayType.Path.index);
             cell.type = CellType.Free;
         });
