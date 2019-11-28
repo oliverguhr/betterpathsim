@@ -53,10 +53,12 @@ export class Assembler implements OnInit {
     heightPx: number;
 
     startSaving: any;
+    goalSaving: any;
     interval: any;
 
     robotIsMoving: any;
     robotHasMoved = false;
+    robotHasFinished = false;
 
     hoveredCell: any;
 
@@ -269,17 +271,33 @@ export class Assembler implements OnInit {
     updateMapsInRadius = () => {
         let mapCells = this.map.cells;
         let changedCells = [];
-        mapCells.forEach( (eachCell) => {
-            let position = eachCell.getPosition;
 
+        let start = this.map.getStartCell();
+        let goal = this.map.getGoalCell();
+
+        mapCells.forEach( (eachCell) => {
+            //Zellen prüfen, ob in Sichtradius des Roboters
+            let position = eachCell.getPosition;
             let distance = Distance.euclid(eachCell,this.start) - 1;
+            let robotMapCell = this.robotMap.getCell(position.x,position.y);
+
             if(distance <= this.map.robotRadius) {
-                let robotMapCell = this.robotMap.getCell(position.x,position.y);
+                //Resetten des angezeigten Wissens
+                eachCell.removeDisplayType(CellDisplayType.OldWall);
+                eachCell.removeDisplayType(CellDisplayType.UnknownWall);
+                eachCell.removeDisplayType(CellDisplayType.Wall);
+
+                //Synchronisieren der Zellen
                 robotMapCell.type = eachCell.type;
-                //Anpassen des Display Types der blockierten Zellen: unknwonWall -> Wall
+
+                //Anzeigen des neuen Wissens
                 if(eachCell.type == CellType.Blocked) eachCell.addDisplayType(CellDisplayType.Wall);
                 
+                //Übertragen des Wissens an Algorithmen-Map
                 changedCells.push(robotMapCell);
+            } else {
+                if(robotMapCell.type == CellType.Blocked && eachCell.type == CellType.Free) 
+                    eachCell.addDisplayType(CellDisplayType.OldWall);
             }
         });
         this.robotMap.updateCells(changedCells);
@@ -287,8 +305,9 @@ export class Assembler implements OnInit {
     }
 
     startRobot = (first: boolean = true) => {
-
         this.robotIsMoving = true;
+        this.robotHasFinished = false;
+
         this.map.resetPath();
         let pathFinder = this.getAlgorithmInstance();
 
@@ -297,6 +316,7 @@ export class Assembler implements OnInit {
 
         if(first){
             this.startSaving = start;
+            this.goalSaving = goal;
             this.robotHasMoved = true;
         } 
 
@@ -315,7 +335,10 @@ export class Assembler implements OnInit {
 
             if (nextCell.isGoal) {              //Code für letzten Schritt
                 clearTimeout(this.interval);
+
                 this.robotIsMoving = false;
+                this.robotHasFinished = true;
+
                 this.start.moveTo(nextCell.position, true);
 
                 //Heuristiken entfernen
@@ -358,14 +381,16 @@ export class Assembler implements OnInit {
     resettRobot = () => {                           //Setzt den Roboter auf den Ausgang seines letzten Startes zurück
         //Timer stoppen
         this.robotIsMoving = false;
+        this.robotHasFinished = false;
         clearTimeout(this.interval);
         
         //Wissen zurücksetzen
         this.robotMap.resetBlocks();
         this.map.resettKnowledge(); 
 
-        //Roboter zurück zum Ausgangspunkt bewegen
+        //Ausgangspositionen wiederherstellen
         this.start.moveTo(this.startSaving.position, false);
+        this.goal.moveTo(this.goalSaving.position, false);
 
         //Sichtradius synchronisieren
         this.updateMapsInRadius();
@@ -374,7 +399,8 @@ export class Assembler implements OnInit {
         this.robotHasMoved = false;     
     }
 
-    restartRobot = () => {                          
+    restartRobot = () => {
+        this.goal.moveTo(this.goalSaving.position, false);                          
         this.startRobot(false);
     }
 

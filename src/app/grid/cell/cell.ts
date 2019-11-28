@@ -22,7 +22,9 @@ export class Cell {
   public color: any;
   public previous: Cell;
   public isOpen: boolean;
+
   private content: CellDisplayType[] = [];
+
   //private content: CellPriorityQueue<CellDisplayType>;
 
     constructor(row: number, col: number, cellType = CellType.Free) {
