@@ -97,23 +97,28 @@ export class Assembler implements OnInit {
         this.robotViewRadius = 5;
         this.robotViewRadiusSetting = this.robotViewRadius;
 
+        //Initialisieren der Maps
         this.map = new Map(this.rows, this.cols, this.robotViewRadius);
         this.robotMap = new Map(this.rows, this.cols, this.robotViewRadius);
 
+        //Initialisieren des Starts und Ziels
         map.start = new Moveable(this.map, this.robotMap, CellType.Start);
         map.start.moveTo(new Position(Math.round(map.cols / 4), Math.round(map.rows / 2)));
         map.goal = new Moveable(this.map, this.robotMap, CellType.Goal);
         map.goal.moveTo(new Position(Math.round((map.cols / 4) * 3), Math.round(map.rows / 2)));
         
+        //Vorhalten des Ursprünglichen Starts und Ziels für Mapresett
+        this.startSaving = this.start;
+        this.goalSaving = this.goal;
+
         this.map.drawViewRadius(this.start);
 
         map.cellSize = 25;
         map.widthPx = map.map.cols * map.cellSize;
         map.heightPx = map.map.rows * map.cellSize;
 
+        //Change-Handler für Änderungen auf der Map
         this.robotMap.notifyOnChange(
-           
-
             (cell: Cell) => {  
                 
                 if (map.robotIsMoving) {
