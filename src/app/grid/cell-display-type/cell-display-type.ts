@@ -34,8 +34,8 @@ export class CellDisplayType {
     public static Goal = new CellDisplayType(950,"#F88");
     public static Start = new CellDisplayType(950,"#8F8");
     public static Wall = new CellDisplayType(900,"#424242");
-    public static UnknownWall = new CellDisplayType(800,"#848484");
-    public static OldWall = new CellDisplayType(700,"#DF7401");
+    public static UnknownWall = new CellDisplayType(800,"#D8D8D8");
+    public static OldWall = new CellDisplayType(700,"#A4A4A4");
     public static Path = new CellDisplayType(400,"#44F");
     public static MoveingObstacle = new CellDisplayType(800,"#BBF");
     public static Free = new CellDisplayType(0,"#FFF");
