@@ -54,6 +54,9 @@ export class Map {
         this.hasChanged(lastCell);
     }
 
+    public resetHeuristics() {
+        this.cells.forEach(eachCell => eachCell.removeDisplayTypeByIndex(300));
+    }
     /*##############################################
                     Getter 
     ##############################################*/

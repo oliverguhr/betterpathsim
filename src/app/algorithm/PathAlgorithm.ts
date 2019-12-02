@@ -18,7 +18,7 @@ export class PathAlgorithm {
           }
           node = node.previous;
         }*/
-        this.map.cells.forEach(cell => cell.removeDisplayTypeByIndex(CellDisplayType.Path.index))
+        this.map.cells.forEach(cell => cell.removeDisplayType(CellDisplayType.Path))
         let start = this.map.getStartCell();
         let node = this.map.getGoalCell();
         let nodeDistance = (cell: Cell) => cell.distance;

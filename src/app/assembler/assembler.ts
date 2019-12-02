@@ -221,10 +221,12 @@ export class Assembler implements OnInit {
         return algorithm;
     };
 
-    visualizePathCosts = () => {
+    visualizePathCosts = (reset: boolean = true) => {
         if (this.isVisualizePathEnabled === true) {
             let visual = new PathCostVisualizer(this.map);
-            visual.paint();
+           
+            if(!reset) visual.oldPaint();
+            else visual.paint();
         }
     };
 
@@ -264,11 +266,15 @@ export class Assembler implements OnInit {
         this.clearRobots();
         let pathFinder = this.getAlgorithmInstance();
 
+        this.map.resetHeuristics();
+
         let interval = setInterval( () => {
             if (!pathFinder.step()) {
                 clearTimeout(interval);
+                this.visualizePathCosts(false);
+                
             } else {
-                this.visualizePathCosts();
+                this.visualizePathCosts(false);
             }
             this.calculateStatistic();
         }, 10);
