@@ -150,6 +150,7 @@ export class Assembler implements OnInit {
                 if (map.algorithmInstance.isInitialized === undefined || map.algorithmInstance.isInitialized === false) {
 
                     if(this.map.getStartCell() !== undefined && this.map.getGoalCell() !== undefined) {
+                        
                         this.calculatePath();
                     }     
                     else {
@@ -310,6 +311,7 @@ export class Assembler implements OnInit {
     }
 
     startRobot = (first: boolean = true) => {
+
         this.robotIsMoving = true;
         this.robotHasFinished = false;
 
@@ -319,61 +321,47 @@ export class Assembler implements OnInit {
         let start = this.map.getStartCell() as Cell;
         let goal = this.map.getGoalCell();
 
+        let nextCell = start;
+
         if(first){
             this.startSaving = start;
             this.goalSaving = goal;
             this.robotHasMoved = true;
         } 
-
-        let lastPosition:Cell;
-
         this.map.drawViewRadius(start);
 
         this.interval = setInterval (() => {        //Startet den Roboter
-            
-            let nextCell = pathFinder.calculatePath(start, goal) as Cell;
 
-            this.map.drawViewRadius(nextCell);
-            this.updateMapsInRadius();
-
-           
-
-            if (nextCell.isGoal) {              //Code für letzten Schritt
+            if(start.isGoal) {
                 clearTimeout(this.interval);
 
                 this.robotIsMoving = false;
                 this.robotHasFinished = true;
 
-                this.start.moveTo(nextCell.position, true);
-
-                //Heuristiken entfernen
-                this.map.cells.forEach((x:Cell) =>{ x.removeDisplayTypeByIndex(300)});
-
-            } else {                            //Code für Zwischenschritt
-
-                //Heuristiken entfernen
-                this.map.cells.forEach((x:Cell) =>{ x.removeDisplayTypeByIndex(300)});
-                //Heuristiken neu zeichnen -- arbeitet nur, wenn Zellen durch AStar als "visited" markiert sind
-                this.visualizePathCosts();
-
-                if(lastPosition !== undefined) {
-                    lastPosition.cellType = CellType.Free;
-                    lastPosition.color = undefined;
-                }
-
-                nextCell.cellType = CellType.Visited;
-                nextCell.color = "#ee00f2";
-                lastPosition=nextCell;
-
-                this.start.moveTo(nextCell.position, true);
+                this.start.moveTo(nextCell.position, true); 
                 
+                //Heuristiken entfernen
+                this.map.cells.forEach((x:Cell) =>{ x.removeDisplayTypeByIndex(300)});
+
+                return;
             }
+
+            this.start.moveTo(nextCell.position, true); 
+            nextCell = pathFinder.calculatePath(start, goal) as Cell;
+
+            //Sichtradius zeichnen und Maps synchronisieren
+            this.map.drawViewRadius(start);
+            this.updateMapsInRadius();
+
+            //Heuristiken entfernen
+            this.map.cells.forEach((x:Cell) =>{ x.removeDisplayTypeByIndex(300)});
+            //Heuristiken neu zeichnen -- arbeitet nur, wenn Zellen durch AStar als "visited" markiert sind
+            this.visualizePathCosts(); 
+        
             this.calculateStatistic();
 
             //Startposition weitersetzen für nächste Itteration -- wenn das nicht passiert, wird der Suchalgorithmus immer wieder von der selben Position aus gestartet
             start = nextCell;
-            
-
         }, this.robotStepInterval);
     }
 
@@ -405,6 +393,7 @@ export class Assembler implements OnInit {
     }
 
     restartRobot = () => {
+        console.log(this.goalSaving.position);
         this.goal.moveTo(this.goalSaving.position, false);                          
         this.startRobot(false);
     }
@@ -494,14 +483,17 @@ export class Assembler implements OnInit {
         let i=0;
 
         if (this.editStartCell) {
-            this.start.moveTo(cell.position);
-            
-            this.showViewRadius();
 
+            this.start.moveTo(cell.position);
+            this.showViewRadius();
             this.editStartCell = false;
-        } else if (this.editGoalCell) {
+
+        } else if (this.editGoalCell) { 
+
             this.goal.moveTo(cell.position);
+            this.goalSaving = cell;
             this.editGoalCell = false;
+
         } else {
             switch (cell.type) {
                 case CellType.Blocked:                
