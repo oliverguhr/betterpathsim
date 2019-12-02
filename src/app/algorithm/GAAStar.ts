@@ -108,19 +108,28 @@ export class GAAStar extends PathAlgorithm {
         this.calculatePath(this.map.getStartCell(),this.map.getGoalCell());        
     }
 
-    private buildPath(s: Cell): void {
-        while (s !== this.start) {
-            if (!(s.isGoal || s.isStart)) {
-                let position = s.getPosition;
-                let viewMapS = this.viewMap.getCell(position.x,position.y);
-
-                viewMapS.addDisplayType(CellDisplayType.Path);
-            }
-            let parent = this.parent.get(s);
-            this.next.set(parent, s);
-            s = parent;
-        }
+   private buildPath(s: Cell): void {                                              //Baut Pfad-Dictionary und zeichnet Pfad auf Karte
+    //Übertragen des Pfades in das next-Dictionary -- Falls Pfad bereits vorhanden: nichts tun
+    while (s !== this.start) {
+        let parent = this.parent.get(s);
+        this.next.set(parent, s);
+        s = parent; 
     }
+
+    //Resett des bisherigen Pfades auf der Karte
+    this.viewMap.cells.forEach(cell => {
+        cell.removeDisplayType(CellDisplayType.Path);
+    });
+
+    //Zeichnen des Pfades
+    while (this.next.get(s) !== undefined) {
+        s = this.next.get(s);
+        let position = s.getPosition;
+        let viewMapS = this.viewMap.getCell(position.x,position.y);
+        viewMapS.addDisplayType(CellDisplayType.Path); 
+    }
+}
+
 
     private aStar(init: Cell): Cell {
         // todo: add code
@@ -241,41 +250,26 @@ export class GAAStar extends PathAlgorithm {
         }
     }
 
-    /**
-     * Observes map changes
-     * Line 33 in pseudo code
-     */
-    private observe(changedCell: Cell) {        
-            /*  Todo: Review
-                Pseudo Code Line 34 to 38
+    private observe(changedCells: Cell[]) {
+        /*  Todo: Review
+            Pseudo Code Line 34 to 38
 
-                We remove all cells with increased edge costs from the current path.
-                In our case, we remove blocked cells from the path.
-            */
+            We remove all cells with increased edge costs from the current path.
+            In our case, we remove blocked cells from the path.
+        */     
 
-            let cellX = changedCell.position.x;
-            let cellY = changedCell.position.y;
-
-            let robotX = this.start.position.x;
-            let robotY = this.start.position.y;
-
-            let distance =  Math.sqrt( Math.pow((robotX - cellX),2) + Math.pow((robotY- cellY),2) );
-
-            //let distance = Distance.euclid(changedCell, this.currentCell);
-            if (distance < this.map.robotRadius) { // arcs in the range of visibility from s
-                if (changedCell.isBlocked) {
-                    this.next.delete(changedCell);
-                } else {
-                    /*
-                        Todo: Fix this. 
-                        ReestablishConsitency should only be called, if the cell was blocked befor. 
-                        Sice the map does not provide the old value yet, we can't tell if the state has changed.
-                        However, until this is fixed we invoke it everytime. This should not hurt, but reduce the performance. 
-                    */
-                    this.reestablishConsitency(changedCell);
-                }
-            }else{
-                console.info("cell change ignored, cell out of sight",changedCell);
-            }        
+        changedCells.forEach(changedCell => {
+            if (changedCell.isBlocked) {
+                this.next.delete(changedCell);
+            } else {
+                /*
+                    Todo: Fix this. 
+                    ReestablishConsistency should only be called, if the cell was blocked before. 
+                    Since the map does not provide the old value yet, we can't tell if the state has changed.
+                    However, until this is fixed we invoke it every time. This should not hurt, but reduce the performance. 
+                */
+                this.reestablishConsitency(changedCell);
+            }
+        });      
     }
 }
