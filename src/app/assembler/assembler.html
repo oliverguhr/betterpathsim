@@ -1,0 +1,135 @@
+<div>
+    <div class="controls">
+        <form>
+                <h1 id="header">Pathsim</h1>
+                <fieldset>
+                    <legend>Map Options</legend>
+                    <table> 
+                        <tr>
+                            <td>
+                                <input type="button" (click)="this.cleanMap()" value="Reset map" />
+                                <input type="button" (click)="this.addDynamicObstacle()" value="Add moving block" />
+                            </td>
+                            <td>
+                                <input type="button" (click)="this.addRandomObstacles()" value="Add random blocks" />
+                                <input type="button" (click)="this.addWalls()" value="Add Walls" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="visualizePathCosts" (click)="this.visualizePathCosts()" [(ngModel)]="this.isVisualizePathEnabled" />
+                            </td>
+                            <td>
+                                <label for="visualizePathCosts">  Visualize path cost </label>  
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Algorithm</legend>
+                    <div class="inputdiv">
+                        <table>
+                            <tr>    
+                                <td> <span>Typ:</span> </td>
+                                <td> <select name="algorithm" id="algorithm" [(ngModel)]="this.algorithm" (ngModelChange)="this.changeAlgorithm()">
+                                    <option value="Dijkstra">Dijkstra</option>
+                                    <option value="AStar">A*</option>
+                                    <option value="GAAStar">GAA*</option>
+                                    <option value="MPGAAStar">MPGAA*</option>
+                                </select>
+                                </td>
+                                <td>
+                                    <input type="number" name="timestepinterval" class="inputWithLabel"  value="" [(ngModel)]="this.robotStepInterval" [disabled]="this.robotIsMoving"/> 
+                                    <label> ms step interval</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> <span>Distance:</span> </td>
+                                <td> <select name="distance" id="distance" [(ngModel)]="this.distance" (ngModelChange)="this.changeAlgorithm();">
+                                    <option value="euklid">Euklid</option>
+                                    <option value="manhattan">Manhattan</option>
+                                    <option value="diagonalShortcut">Diagonal Shortcut</option>
+                                </select>
+                                </td>
+                                <td>
+                                        <input type="number" name="viewradius" min="1" class="inputWithLabel" value="" [(ngModel)]="this.robotViewRadiusSetting" (ngModelChange)="this.showViewRadius()"/>
+                                        <label> View Radius <br> ( 1 = off )</label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <input type="button" (click)="this.runStepByStep()" value="Run step by step" [hidden]="this.algorithm == 'LpaStar' || this.algorithm == 'MPGAAStar'|| this.algorithm == 'GAAStar'" />
+                    
+                    <div [hidden]="this.algorithm == 'LpaStar' || this.algorithm == 'Dijkstra'|| this.algorithm == 'AStar'">
+                        <input type="button" (click)="this.startRobot()" value="Start Robot" [disabled]="this.robotIsMoving || this.robotHasFinished" [hidden]="this.robotIsMoving || this.robotHasMoved " />
+                        <input type="button" (click)="this.restartRobot()" value="Restart Robot" [disabled]="this.robotIsMoving || this.robotHasFinished" [hidden]="this.robotIsMoving || !this.robotHasMoved " />
+                        <input type="button" (click)="this.stopRobot()" value="Stop Robot" [disabled]="!this.robotIsMoving || this.robotHasFinished" [hidden]="!this.robotIsMoving" />
+                        <input type="button" (click)="this.resettRobot()" value="Resett Robot" />
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Statistic</legend>
+                    <div>Visited Cells: <span>{{this.stat.visitedCells}}</span></div>
+                    <div>Path Length: <span>{{this.stat.pathLength}}</span></div>
+                </fieldset>
+                
+                <fieldset id="fsCell">
+                    <legend>Cell</legend>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>Position</td><td>{{this.hoveredCell.position.x}} {{this.hoveredCell.position.y}}<td> 
+                        </tr>
+                        <tr [hidden]="!this.hoveredCell.distance">
+                          <td>Distance g(x)</td><td>{{this.hoveredCell.distance | number:'.0-3'}}<td>
+                        </tr>
+                        <tr [hidden]="!this.hoveredCell.rhs">
+                          <td>Rhs</td><td>{{this.hoveredCell.rhs | number:'.0-3'}}<td>
+                        </tr>  
+                         <tr [hidden]="!this.hoveredCell.estimatedDistance">
+                          <td>est. Distance f(x)</td><td>{{this.hoveredCell.estimatedDistance | number:'.0-3'}}<td>
+                        </tr>  
+                         <tr [hidden]="!this.hoveredCell.heuristicDistance">
+                          <td>heuristic Distance h(x)</td><td>{{this.hoveredCell.heuristicDistance | number:'.0-3'}}<td> 
+                        </tr>                           
+
+                        <tr >
+                          <td>color h(x)</td><td>{{this.hoveredCell.color}}<td> 
+                        </tr>                           
+                      </tbody>
+                    </table>
+                </fieldset>
+            </form>
+        </div>
+
+        <svg    attr.height.px="{{this.heightPx +1}}" 
+        attr.width.px="{{this.widthPx + 1}}">
+        <g *ngFor="let row of this.map.grid">
+            
+            <rect   *ngFor="let cell of row" 
+                    attr.x.px="{{cell.position.x * this.cellSize}}" 
+                    attr.y.px="{{cell.position.y * this.cellSize}}" 
+                    attr.width.px="{{this.cellSize}}" 
+                    attr.height.px="{{this.cellSize}}"                     
+                    (mousedown)="this.clickOnCell(cell)" 
+                    (mouseover)="this.mouseOverCell(cell, $event)" 
+                    [ngStyle]="{'fill': cell.color}"
+                    >
+                    
+            </rect>
+        </g>
+        
+        
+        <circle attr.cx = "{{this.map.viewRadiusX}}" 
+                attr.cy = "{{this.map.viewRadiusY}}" 
+                [attr.r] = "this.map.viewRadiusR" 
+                stroke   = "black"
+                fill     = "none"
+                >
+        </circle>
+        
+    </svg> 
+</div>
